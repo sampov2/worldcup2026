@@ -46,8 +46,8 @@
     --text-sub:     #555555;
     --text-muted:   #888888;
     --gold:         #111111;
-    --highlight-bg: #f0faf4;
-    --highlight-bl: #27ae60;
+    --highlight-bg: #e8e8e8;
+    --highlight-bl: #555555;
     --ctrl-bg:      #ffffff;
     --ctrl-border:  #111111;
     --ctrl-text:    #111111;
@@ -234,6 +234,10 @@
     background: transparent; padding: 1.5px 2px;
     margin-bottom: 1.5px; border-radius: 1px;
     border-left-width: 2.5px; gap: 4px;
+  }
+  body.print-mode .match.highlighted {
+    background: #e0e0e0;
+    border-left-color: #555555;
   }
 
   .match.highlighted {
