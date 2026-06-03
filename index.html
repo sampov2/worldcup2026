@@ -319,7 +319,7 @@
   <div class="header">
     <div>
       <h1>FIFA World Cup 2026 &mdash; Group Stage</h1>
-      <div class="sub">All 72 matches &bull; 11 June &ndash; 27 June &bull; USA / Canada / Mexico</div>
+      <div class="sub">All 72 group stage matches &bull; 11 June &ndash; 27 June &bull; USA / Canada / Mexico</div>
     </div>
     <div class="header-right">
       <div class="ctrl-row">
@@ -423,97 +423,100 @@
 
   <div class="footer">
     <p id="footer-tz">All times AEST (UTC+10) &bull; Source: FIFA / Fox Sports 2026</p>
-    <p> 72 matches &bull; 12 groups &bull; Top 2 per group + 8 best 3rd place advance</p>
+    <p>72 group stage matches &bull; 12 groups &bull; Top 2 per group + 8 best 3rd place advance</p>
   </div>
 
 </div>
 
 <script>
+// UTC times verified from kickoffclock.com CSV (cross-referenced FIFA/Fox Sports)
 const MATCHES = [
   // Group A
-  { grp:'A', utc:19,   date:'2026-06-11', teams:'Mexico v South Africa',      venue:'Mexico City'   },
-  { grp:'A', utc:26,   date:'2026-06-11', teams:'South Korea v Czechia',      venue:'Guadalajara'   },
-  { grp:'A', utc:16,   date:'2026-06-18', teams:'Czechia v South Africa',     venue:'Atlanta'       },
-  { grp:'A', utc:25,   date:'2026-06-18', teams:'Mexico v South Korea',       venue:'Guadalajara'   },
-  { grp:'A', utc:25,   date:'2026-06-24', teams:'Mexico v Czechia',           venue:'Mexico City'   },
-  { grp:'A', utc:25,   date:'2026-06-24', teams:'S. Korea v South Africa',    venue:'Monterrey'     },
+  { grp:'A', utc:19,   date:'2026-06-11', teams:'Mexico v South Africa',       venue:'Mexico City'   },
+  { grp:'A', utc:2,    date:'2026-06-12', teams:'South Korea v Czechia',       venue:'Guadalajara'   },
+  { grp:'A', utc:16,   date:'2026-06-18', teams:'Czechia v South Africa',      venue:'Atlanta'       },
+  { grp:'A', utc:1,    date:'2026-06-19', teams:'Mexico v South Korea',        venue:'Guadalajara'   },
+  { grp:'A', utc:1,    date:'2026-06-25', teams:'Czechia v Mexico',            venue:'Mexico City'   },
+  { grp:'A', utc:1,    date:'2026-06-25', teams:'South Africa v South Korea',  venue:'Monterrey'     },
   // Group B
-  { grp:'B', utc:19,   date:'2026-06-12', teams:'Canada v Bosnia & Herz.',    venue:'Toronto'       },
-  { grp:'B', utc:19,   date:'2026-06-13', teams:'Qatar v Switzerland',        venue:'San Francisco' },
-  { grp:'B', utc:19,   date:'2026-06-18', teams:'Switzerland v Bosnia',       venue:'Los Angeles'   },
-  { grp:'B', utc:22,   date:'2026-06-18', teams:'Canada v Qatar',             venue:'Vancouver'     },
-  { grp:'B', utc:19,   date:'2026-06-24', teams:'Switzerland v Canada',       venue:'Vancouver'     },
-  { grp:'B', utc:19,   date:'2026-06-24', teams:'Bosnia v Qatar',             venue:'Seattle'       },
+  { grp:'B', utc:19,   date:'2026-06-12', teams:'Canada v Bosnia & Herz.',     venue:'Toronto'       },
+  { grp:'B', utc:19,   date:'2026-06-13', teams:'Qatar v Switzerland',         venue:'San Francisco' },
+  { grp:'B', utc:19,   date:'2026-06-18', teams:'Switzerland v Bosnia',        venue:'Los Angeles'   },
+  { grp:'B', utc:22,   date:'2026-06-18', teams:'Canada v Qatar',              venue:'Vancouver'     },
+  { grp:'B', utc:19,   date:'2026-06-24', teams:'Switzerland v Canada',        venue:'Vancouver'     },
+  { grp:'B', utc:19,   date:'2026-06-24', teams:'Bosnia v Qatar',              venue:'Seattle'       },
   // Group C
-  { grp:'C', utc:22,   date:'2026-06-13', teams:'Brazil v Morocco',           venue:'New York/NJ'   },
-  { grp:'C', utc:25,   date:'2026-06-13', teams:'Haiti v Scotland',           venue:'Boston'        },
-  { grp:'C', utc:19,   date:'2026-06-19', teams:'Scotland v Morocco',         venue:'Boston'        },
-  { grp:'C', utc:25,   date:'2026-06-19', teams:'Brazil v Haiti',             venue:'Philadelphia'  },
-  { grp:'C', utc:22,   date:'2026-06-24', teams:'Brazil v Scotland',          venue:'Miami'         },
-  { grp:'C', utc:22,   date:'2026-06-24', teams:'Morocco v Haiti',            venue:'Atlanta'       },
+  { grp:'C', utc:22,   date:'2026-06-13', teams:'Brazil v Morocco',            venue:'New York/NJ'   },
+  { grp:'C', utc:1,    date:'2026-06-14', teams:'Haiti v Scotland',            venue:'Boston'        },
+  { grp:'C', utc:22,   date:'2026-06-19', teams:'Scotland v Morocco',          venue:'Boston'        },
+  { grp:'C', utc:0.5,  date:'2026-06-20', teams:'Brazil v Haiti',              venue:'Philadelphia'  },
+  { grp:'C', utc:22,   date:'2026-06-24', teams:'Scotland v Brazil',           venue:'Miami'         },
+  { grp:'C', utc:22,   date:'2026-06-24', teams:'Morocco v Haiti',             venue:'Atlanta'       },
   // Group D
-  { grp:'D', utc:25,   date:'2026-06-12', teams:'USA v Paraguay',             venue:'Los Angeles'   },
-  { grp:'D', utc:28,   date:'2026-06-13', teams:'Australia v Turkiye',        venue:'Vancouver'     },
-  { grp:'D', utc:19,   date:'2026-06-19', teams:'USA v Australia',            venue:'Seattle'       },
-  { grp:'D', utc:28,   date:'2026-06-19', teams:'Turkiye v Paraguay',         venue:'San Francisco' },
-  { grp:'D', utc:26,   date:'2026-06-25', teams:'USA v Turkiye',              venue:'Los Angeles'   },
-  { grp:'D', utc:26,   date:'2026-06-25', teams:'Paraguay v Australia',       venue:'San Francisco' },
+  { grp:'D', utc:1,    date:'2026-06-13', teams:'USA v Paraguay',              venue:'Los Angeles'   },
+  // Australia v Turkiye: 9pm PDT Jun 13 (Vancouver) = UTC 04:00 Jun 14 = 14:00 AEST Jun 14
+  { grp:'D', utc:4,    date:'2026-06-14', teams:'Australia v Turkiye',         venue:'Vancouver'     },
+  { grp:'D', utc:19,   date:'2026-06-19', teams:'USA v Australia',             venue:'Seattle'       },
+  { grp:'D', utc:3,    date:'2026-06-20', teams:'Turkiye v Paraguay',          venue:'San Francisco' },
+  // Paraguay v Australia: 7pm PDT Jun 25 (Santa Clara) = UTC 02:00 Jun 26 = 12:00 AEST Jun 26
+  { grp:'D', utc:2,    date:'2026-06-26', teams:'Turkiye v USA',               venue:'Los Angeles'   },
+  { grp:'D', utc:2,    date:'2026-06-26', teams:'Paraguay v Australia',        venue:'San Francisco' },
   // Group E
-  { grp:'E', utc:17,   date:'2026-06-14', teams:'Germany v Curacao',          venue:'Houston'       },
-  { grp:'E', utc:23,   date:'2026-06-14', teams:'Ivory Coast v Ecuador',      venue:'Philadelphia'  },
-  { grp:'E', utc:20,   date:'2026-06-20', teams:'Germany v Ivory Coast',      venue:'Toronto'       },
-  { grp:'E', utc:24,   date:'2026-06-20', teams:'Ecuador v Curacao',          venue:'Kansas City'   },
-  { grp:'E', utc:20,   date:'2026-06-25', teams:'Ecuador v Germany',          venue:'New York/NJ'   },
-  { grp:'E', utc:20,   date:'2026-06-25', teams:'Curacao v Ivory Coast',      venue:'Philadelphia'  },
+  { grp:'E', utc:17,   date:'2026-06-14', teams:'Germany v Curacao',           venue:'Houston'       },
+  { grp:'E', utc:23,   date:'2026-06-14', teams:'Ivory Coast v Ecuador',       venue:'Philadelphia'  },
+  { grp:'E', utc:20,   date:'2026-06-20', teams:'Germany v Ivory Coast',       venue:'Toronto'       },
+  { grp:'E', utc:0,    date:'2026-06-21', teams:'Ecuador v Curacao',           venue:'Kansas City'   },
+  { grp:'E', utc:20,   date:'2026-06-25', teams:'Curacao v Ivory Coast',       venue:'Philadelphia'  },
+  { grp:'E', utc:20,   date:'2026-06-25', teams:'Ecuador v Germany',           venue:'New York/NJ'   },
   // Group F
-  { grp:'F', utc:20,   date:'2026-06-14', teams:'Netherlands v Japan',        venue:'Dallas'        },
-  { grp:'F', utc:26,   date:'2026-06-14', teams:'Tunisia v Sweden',           venue:'Monterrey'     },
-  { grp:'F', utc:17,   date:'2026-06-20', teams:'Netherlands v Sweden',       venue:'Houston'       },
-  { grp:'F', utc:28,   date:'2026-06-20', teams:'Tunisia v Japan',            venue:'Monterrey'     },
-  { grp:'F', utc:23,   date:'2026-06-25', teams:'Tunisia v Netherlands',      venue:'Kansas City'   },
-  { grp:'F', utc:23,   date:'2026-06-25', teams:'Japan v Sweden',             venue:'Dallas'        },
+  { grp:'F', utc:20,   date:'2026-06-14', teams:'Netherlands v Japan',         venue:'Dallas'        },
+  { grp:'F', utc:2,    date:'2026-06-15', teams:'Sweden v Tunisia',            venue:'Monterrey'     },
+  { grp:'F', utc:17,   date:'2026-06-20', teams:'Netherlands v Sweden',        venue:'Houston'       },
+  { grp:'F', utc:4,    date:'2026-06-21', teams:'Tunisia v Japan',             venue:'Monterrey'     },
+  { grp:'F', utc:23,   date:'2026-06-25', teams:'Japan v Sweden',              venue:'Dallas'        },
+  { grp:'F', utc:23,   date:'2026-06-25', teams:'Tunisia v Netherlands',       venue:'Kansas City'   },
   // Group G
-  { grp:'G', utc:19,   date:'2026-06-15', teams:'Belgium v Egypt',            venue:'Seattle'       },
-  { grp:'G', utc:25,   date:'2026-06-15', teams:'Iran v New Zealand',         venue:'Los Angeles'   },
-  { grp:'G', utc:19,   date:'2026-06-21', teams:'Belgium v Iran',             venue:'Los Angeles'   },
-  { grp:'G', utc:25,   date:'2026-06-21', teams:'New Zealand v Egypt',        venue:'Vancouver'     },
-  { grp:'G', utc:27,   date:'2026-06-26', teams:'New Zealand v Belgium',      venue:'Vancouver'     },
-  { grp:'G', utc:27,   date:'2026-06-26', teams:'Egypt v Iran',               venue:'Seattle'       },
+  { grp:'G', utc:19,   date:'2026-06-15', teams:'Belgium v Egypt',             venue:'Seattle'       },
+  { grp:'G', utc:1,    date:'2026-06-16', teams:'Iran v New Zealand',          venue:'Los Angeles'   },
+  { grp:'G', utc:19,   date:'2026-06-21', teams:'Belgium v Iran',              venue:'Los Angeles'   },
+  { grp:'G', utc:1,    date:'2026-06-22', teams:'New Zealand v Egypt',         venue:'Vancouver'     },
+  { grp:'G', utc:3,    date:'2026-06-27', teams:'Egypt v Iran',                venue:'Seattle'       },
+  { grp:'G', utc:3,    date:'2026-06-27', teams:'New Zealand v Belgium',       venue:'Vancouver'     },
   // Group H
-  { grp:'H', utc:16,   date:'2026-06-15', teams:'Spain v Cape Verde',         venue:'Atlanta'       },
-  { grp:'H', utc:22,   date:'2026-06-15', teams:'Saudi Arabia v Uruguay',     venue:'Miami'         },
-  { grp:'H', utc:16,   date:'2026-06-21', teams:'Spain v Saudi Arabia',       venue:'Atlanta'       },
-  { grp:'H', utc:22,   date:'2026-06-21', teams:'Uruguay v Cape Verde',       venue:'Miami'         },
-  { grp:'H', utc:24,   date:'2026-06-26', teams:'Uruguay v Spain',            venue:'Guadalajara'   },
-  { grp:'H', utc:24,   date:'2026-06-26', teams:'Cape Verde v Saudi Arabia',  venue:'Houston'       },
+  { grp:'H', utc:16,   date:'2026-06-15', teams:'Spain v Cape Verde',          venue:'Atlanta'       },
+  { grp:'H', utc:22,   date:'2026-06-15', teams:'Saudi Arabia v Uruguay',      venue:'Miami'         },
+  { grp:'H', utc:16,   date:'2026-06-21', teams:'Spain v Saudi Arabia',        venue:'Atlanta'       },
+  { grp:'H', utc:22,   date:'2026-06-21', teams:'Uruguay v Cape Verde',        venue:'Miami'         },
+  { grp:'H', utc:0,    date:'2026-06-27', teams:'Cape Verde v Saudi Arabia',   venue:'Houston'       },
+  { grp:'H', utc:0,    date:'2026-06-27', teams:'Uruguay v Spain',             venue:'Guadalajara'   },
   // Group I
-  { grp:'I', utc:19,   date:'2026-06-16', teams:'France v Senegal',           venue:'New York/NJ'   },
-  { grp:'I', utc:22,   date:'2026-06-16', teams:'Iraq v Norway',              venue:'Boston'        },
-  { grp:'I', utc:21,   date:'2026-06-22', teams:'France v Iraq',              venue:'Philadelphia'  },
-  { grp:'I', utc:24,   date:'2026-06-22', teams:'Norway v Senegal',           venue:'New York/NJ'   },
-  { grp:'I', utc:19,   date:'2026-06-26', teams:'Norway v France',            venue:'Boston'        },
-  { grp:'I', utc:19,   date:'2026-06-26', teams:'Senegal v Iraq',             venue:'Toronto'       },
+  { grp:'I', utc:19,   date:'2026-06-16', teams:'France v Senegal',            venue:'New York/NJ'   },
+  { grp:'I', utc:22,   date:'2026-06-16', teams:'Iraq v Norway',               venue:'Boston'        },
+  { grp:'I', utc:21,   date:'2026-06-22', teams:'France v Iraq',               venue:'Philadelphia'  },
+  { grp:'I', utc:0,    date:'2026-06-23', teams:'Norway v Senegal',            venue:'New York/NJ'   },
+  { grp:'I', utc:19,   date:'2026-06-26', teams:'Norway v France',             venue:'Boston'        },
+  { grp:'I', utc:19,   date:'2026-06-26', teams:'Senegal v Iraq',              venue:'Toronto'       },
   // Group J
-  { grp:'J', utc:25,   date:'2026-06-16', teams:'Argentina v Algeria',        venue:'Kansas City'   },
-  { grp:'J', utc:28,   date:'2026-06-16', teams:'Austria v Jordan',           venue:'San Francisco' },
-  { grp:'J', utc:17,   date:'2026-06-22', teams:'Argentina v Austria',        venue:'Dallas'        },
-  { grp:'J', utc:27,   date:'2026-06-22', teams:'Jordan v Algeria',           venue:'San Francisco' },
-  { grp:'J', utc:26,   date:'2026-06-27', teams:'Argentina v Jordan',         venue:'Dallas'        },
-  { grp:'J', utc:26,   date:'2026-06-27', teams:'Algeria v Austria',          venue:'Kansas City'   },
+  { grp:'J', utc:1,    date:'2026-06-17', teams:'Argentina v Algeria',         venue:'Kansas City'   },
+  { grp:'J', utc:4,    date:'2026-06-17', teams:'Austria v Jordan',            venue:'San Francisco' },
+  { grp:'J', utc:17,   date:'2026-06-22', teams:'Argentina v Austria',         venue:'Dallas'        },
+  { grp:'J', utc:3,    date:'2026-06-23', teams:'Jordan v Algeria',            venue:'San Francisco' },
+  { grp:'J', utc:2,    date:'2026-06-28', teams:'Jordan v Argentina',          venue:'Dallas'        },
+  { grp:'J', utc:2,    date:'2026-06-28', teams:'Algeria v Austria',           venue:'Kansas City'   },
   // Group K
-  { grp:'K', utc:17,   date:'2026-06-17', teams:'Portugal v Congo DR',        venue:'Houston'       },
-  { grp:'K', utc:26,   date:'2026-06-17', teams:'Uzbekistan v Colombia',      venue:'Mexico City'   },
-  { grp:'K', utc:17,   date:'2026-06-23', teams:'Portugal v Uzbekistan',      venue:'Houston'       },
-  { grp:'K', utc:26,   date:'2026-06-23', teams:'Colombia v Congo DR',        venue:'Guadalajara'   },
-  { grp:'K', utc:23.5, date:'2026-06-27', teams:'Colombia v Portugal',        venue:'Miami'         },
-  { grp:'K', utc:23.5, date:'2026-06-27', teams:'Congo DR v Uzbekistan',      venue:'Atlanta'       },
+  { grp:'K', utc:17,   date:'2026-06-17', teams:'Portugal v Congo DR',         venue:'Houston'       },
+  { grp:'K', utc:2,    date:'2026-06-18', teams:'Uzbekistan v Colombia',       venue:'Mexico City'   },
+  { grp:'K', utc:17,   date:'2026-06-23', teams:'Portugal v Uzbekistan',       venue:'Houston'       },
+  { grp:'K', utc:2,    date:'2026-06-24', teams:'Colombia v Congo DR',         venue:'Guadalajara'   },
+  { grp:'K', utc:23.5, date:'2026-06-27', teams:'Colombia v Portugal',         venue:'Miami'         },
+  { grp:'K', utc:23.5, date:'2026-06-27', teams:'Congo DR v Uzbekistan',       venue:'Atlanta'       },
   // Group L
-  { grp:'L', utc:20,   date:'2026-06-17', teams:'England v Croatia',          venue:'Dallas'        },
-  { grp:'L', utc:23,   date:'2026-06-17', teams:'Ghana v Panama',             venue:'Toronto'       },
-  { grp:'L', utc:20,   date:'2026-06-23', teams:'England v Ghana',            venue:'Boston'        },
-  { grp:'L', utc:23,   date:'2026-06-23', teams:'Panama v Croatia',           venue:'Toronto'       },
-  { grp:'L', utc:21,   date:'2026-06-27', teams:'Panama v England',           venue:'New York/NJ'   },
-  { grp:'L', utc:21,   date:'2026-06-27', teams:'Croatia v Ghana',            venue:'Philadelphia'  },
+  { grp:'L', utc:20,   date:'2026-06-17', teams:'England v Croatia',           venue:'Dallas'        },
+  { grp:'L', utc:23,   date:'2026-06-17', teams:'Ghana v Panama',              venue:'Toronto'       },
+  { grp:'L', utc:20,   date:'2026-06-23', teams:'England v Ghana',             venue:'Boston'        },
+  { grp:'L', utc:23,   date:'2026-06-23', teams:'Panama v Croatia',            venue:'Toronto'       },
+  { grp:'L', utc:21,   date:'2026-06-27', teams:'Panama v England',            venue:'New York/NJ'   },
+  { grp:'L', utc:21,   date:'2026-06-27', teams:'Croatia v Ghana',             venue:'Philadelphia'  },
 ];
 
 // ISO 3166-1 alpha-2 codes for flagcdn.com
@@ -528,8 +531,7 @@ const FLAGS = {
   'Morocco':'ma','Netherlands':'nl','New Zealand':'nz','Norway':'no',
   'Panama':'pa','Paraguay':'py','Portugal':'pt','Qatar':'qa',
   'Saudi Arabia':'sa','Scotland':'gb-sct','Senegal':'sn',
-  'South Africa':'za','South Korea':'kr','S. Korea':'kr',
-  'Spain':'es','Sweden':'se','Switzerland':'ch','Tunisia':'tn',
+  'South Africa':'za','South Korea':'kr','S. Korea':'kr',  'Spain':'es','Sweden':'se','Switzerland':'ch','Tunisia':'tn',
   'Turkiye':'tr','Uruguay':'uy','USA':'us','Uzbekistan':'uz',
 };
 
