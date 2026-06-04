@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FIFA World Cup 2026 - Group Stage Schedule</title>
+<title>FIFA World Cup 2026 - Full Schedule</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap');
 
@@ -87,9 +87,9 @@
 
   /* ── PRINT MODE: lock to A4 ──────────────────────────────────────────────── */
   body.print-mode .page {
-    width: 210mm; height: 297mm; max-width: 210mm;
+    width: 210mm; max-width: 210mm;
     padding: 8mm 8mm 6mm 8mm;
-    overflow: hidden; min-height: unset;
+    min-height: unset;
     box-shadow: none;
   }
 
@@ -157,6 +157,40 @@
   }
   body.print-mode #mode-toggle { font-size: 10px; padding: 3px 10px; border-radius: 3px; }
   #mode-toggle:hover { opacity: 0.8; }
+  #knockout-toggle {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: clamp(11px, 1.5vw, 13px);
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 4px; cursor: pointer;
+    border: 1.5px solid var(--ctrl-border);
+    background: var(--ctrl-bg); color: var(--ctrl-text);
+    transition: all 0.2s; white-space: nowrap;
+  }
+  body.print-mode #knockout-toggle { font-size: 10px; padding: 3px 10px; border-radius: 3px; }
+  #knockout-toggle:hover { opacity: 0.8; }
+
+  /* knockout section heading */
+  .knockout-heading {
+    grid-column: 1 / -1;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 4px;
+    margin-top: 8px;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .knockout-heading h2 {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+    font-size: clamp(14px, 2.5vw, 18px);
+    text-transform: uppercase; letter-spacing: 2px; color: var(--gold);
+  }
+  body.print-mode .knockout-heading { margin-top: 4px; border-bottom-width: 1.5px; }
+  body.print-mode .knockout-heading h2 { font-size: 12px; }
+  .knockout-heading .ko-sub {
+    font-family: 'Barlow Condensed', sans-serif; font-size: clamp(10px, 1.5vw, 12px);
+    color: var(--text-sub); letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  .ko-match .grp { color: var(--text-muted); font-style: italic; width: auto; font-size: 8px; }
+
 
   .highlight-note {
     font-size: clamp(10px, 1.5vw, 12px);
@@ -218,7 +252,7 @@
     font-size: clamp(12px, 1.8vw, 14px);
     color: var(--text); letter-spacing: 0.5px;
   }
-  body.print-mode .day-date { font-size: 10px; color: var(--text-sub); font-weight: 400; }
+  body.print-mode .day-date { font-size: 10px; color: #111; font-weight: 700; }
 
   /* ── MATCH ROW ───────────────────────────────────────────────────────────── */
   .match {
@@ -271,7 +305,7 @@
     color: var(--text-muted); flex-shrink: 0;
     text-align: right; font-family: 'Barlow', sans-serif;
   }
-  body.print-mode .venue { font-size: 8.5px; }
+  body.print-mode .venue { font-size: 8.5px; color: #111 !important; }
 
   .vs { color: var(--text-muted); font-size: clamp(9px, 1.3vw, 11px); margin: 0 3px; font-weight: 400; }
   body.print-mode .vs { font-size: 8px; margin: 0 2px; }
@@ -298,7 +332,7 @@
   /* ── PRINT MEDIA ─────────────────────────────────────────────────────────── */
   @media print {
     body { background: #fff !important; }
-    .page { margin: 0; padding: 8mm 8mm 6mm 8mm; box-shadow: none; width: 210mm; max-width: 210mm; }
+    .page { margin: 0; padding: 8mm 8mm 6mm 8mm; box-shadow: none; width: 210mm; max-width: 210mm; height: auto; overflow: visible; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     #mode-toggle { display: none; }
   }
@@ -318,12 +352,13 @@
 
   <div class="header">
     <div>
-      <h1>FIFA World Cup 2026 &mdash; Group Stage</h1>
-      <div class="sub">All 72 group stage matches &bull; 11 June &ndash; 27 June &bull; USA / Canada / Mexico</div>
+      <h1>FIFA World Cup 2026</h1>
+      <div class="sub">All 104 matches &bull; 11 June &ndash; 19 July &bull; USA / Canada / Mexico</div>
     </div>
     <div class="header-right">
       <div class="ctrl-row">
         <button id="mode-toggle">&#9788; Switch to Print Mode</button>
+        <button id="knockout-toggle">Hide Knockout Stage</button>
       </div>
       <div class="ctrl-row">
         <span class="ctrl-label">Timezone</span>
@@ -519,6 +554,51 @@ const MATCHES = [
   { grp:'L', utc:21,   date:'2026-06-27', teams:'Croatia v Ghana',             venue:'Philadelphia'  },
 ];
 
+
+// UTC times from kickoffclock CSV. Venues/opponents TBD for knockout rounds.
+// Round labels: R32=Round of 32, R16=Round of 16, QF=Quarter-final, SF=Semi-final, F=Final
+const KNOCKOUT_MATCHES = [
+  // Round of 32 (M73-M88) - Jun 28 - Jul 4
+  { grp:'R32', num:'M73', utc:19,   date:'2026-06-28', teams:'2nd A v 2nd B',         venue:'Los Angeles'   },
+  { grp:'R32', num:'M74', utc:17,   date:'2026-06-29', teams:'Win C v 2nd F',         venue:'Houston'       },
+  { grp:'R32', num:'M75', utc:20.5, date:'2026-06-29', teams:'Win E v 3rd A/B/C/D/F', venue:'Boston'        },
+  { grp:'R32', num:'M76', utc:1,    date:'2026-06-30', teams:'Win F v 2nd C',         venue:'Monterrey'     },
+  { grp:'R32', num:'M77', utc:17,   date:'2026-06-30', teams:'2nd E v 2nd I',         venue:'Dallas'        },
+  { grp:'R32', num:'M78', utc:21,   date:'2026-06-30', teams:'Win I v 3rd C/D/F/G/H', venue:'New York/NJ'   },
+  { grp:'R32', num:'M79', utc:1,    date:'2026-07-01', teams:'Win A v 3rd C/E/F/H/I', venue:'Mexico City'   },
+  { grp:'R32', num:'M80', utc:16,   date:'2026-07-01', teams:'Win L v 3rd E/H/I/J/K', venue:'Atlanta'       },
+  { grp:'R32', num:'M81', utc:20,   date:'2026-07-01', teams:'Win G v 3rd A/E/H/I/J', venue:'Seattle'       },
+  { grp:'R32', num:'M82', utc:0,    date:'2026-07-02', teams:'Win D v 3rd B/E/F/I/J', venue:'San Francisco' },
+  { grp:'R32', num:'M83', utc:19,   date:'2026-07-02', teams:'Win H v 2nd J',         venue:'Los Angeles'   },
+  { grp:'R32', num:'M84', utc:23,   date:'2026-07-02', teams:'2nd K v 2nd L',         venue:'Toronto'       },
+  { grp:'R32', num:'M85', utc:3,    date:'2026-07-03', teams:'Win B v 3rd D/E/I/J/L', venue:'Vancouver'     },
+  { grp:'R32', num:'M86', utc:18,   date:'2026-07-03', teams:'2nd D v 2nd G',         venue:'Dallas'        },
+  { grp:'R32', num:'M87', utc:22,   date:'2026-07-03', teams:'Win J v 2nd H',         venue:'Miami'         },
+  { grp:'R32', num:'M88', utc:1.5,  date:'2026-07-04', teams:'Win K v 3rd D/E/I/J/L',venue:'Kansas City'   },
+  // Round of 16 (M89-M96) - Jul 4-8
+  { grp:'R16', num:'M89', utc:17,   date:'2026-07-04', teams:'Win M73 v Win M75',     venue:'Houston'       },
+  { grp:'R16', num:'M90', utc:21,   date:'2026-07-04', teams:'Win M74 v Win M77',     venue:'Philadelphia'  },
+  { grp:'R16', num:'M91', utc:20,   date:'2026-07-05', teams:'Win M76 v Win M78',     venue:'New York/NJ'   },
+  { grp:'R16', num:'M92', utc:0,    date:'2026-07-06', teams:'Win M79 v Win M80',     venue:'Mexico City'   },
+  { grp:'R16', num:'M93', utc:19,   date:'2026-07-06', teams:'Win M81 v Win M82',     venue:'Dallas'        },
+  { grp:'R16', num:'M94', utc:0,    date:'2026-07-07', teams:'Win M83 v Win M84',     venue:'Seattle'       },
+  { grp:'R16', num:'M95', utc:16,   date:'2026-07-07', teams:'Win M85 v Win M86',     venue:'Atlanta'       },
+  { grp:'R16', num:'M96', utc:20,   date:'2026-07-07', teams:'Win M87 v Win M88',     venue:'Vancouver'     },
+  // Quarter-finals (M97-M100) - Jul 9-12
+  { grp:'QF',  num:'M97', utc:20,   date:'2026-07-09', teams:'Win M89 v Win M90',     venue:'Boston'        },
+  { grp:'QF',  num:'M98', utc:19,   date:'2026-07-10', teams:'Win M91 v Win M92',     venue:'Los Angeles'   },
+  { grp:'QF',  num:'M99', utc:21,   date:'2026-07-11', teams:'Win M93 v Win M94',     venue:'Miami'         },
+  { grp:'QF',  num:'M100',utc:1,    date:'2026-07-12', teams:'Win M95 v Win M96',     venue:'Kansas City'   },
+  // Semi-finals (M101-M102) - Jul 14-15
+  { grp:'SF',  num:'M101',utc:19,   date:'2026-07-14', teams:'Win M97 v Win M98',     venue:'Dallas'        },
+  { grp:'SF',  num:'M102',utc:19,   date:'2026-07-15', teams:'Win M99 v Win M100',    venue:'Atlanta'       },
+  // Third place M103 + Final M104
+  { grp:'3rd', num:'M103',utc:21,   date:'2026-07-18', teams:'Loss M101 v Loss M102', venue:'Miami'         },
+  { grp:'F',   num:'M104',utc:19,   date:'2026-07-19', teams:'FINAL: Win M101 v Win M102', venue:'New York/NJ'},
+];
+
+let showKnockout = true;
+
 // ISO 3166-1 alpha-2 codes for flagcdn.com
 const FLAGS = {
   'Algeria':'dz','Argentina':'ar','Australia':'au','Austria':'at',
@@ -587,6 +667,8 @@ function render(offset, team) {
 
   const sched = document.getElementById('schedule');
   sched.innerHTML = '';
+
+  // --- GROUP STAGE ---
   keys.forEach(k => {
     const hdr = fmtHeader(k);
     const div = document.createElement('div');
@@ -606,6 +688,51 @@ function render(offset, team) {
     div.innerHTML = html;
     sched.appendChild(div);
   });
+
+  // --- KNOCKOUT STAGE ---
+  if (showKnockout) {
+    // Heading spanning both columns
+    const heading = document.createElement('div');
+    heading.className = 'knockout-heading';
+    heading.innerHTML = '<h2>Knockout Stage</h2><span class="ko-sub">Round of 32 &bull; R16 &bull; QF &bull; SF &bull; Final</span>';
+    sched.appendChild(heading);
+
+    // Bucket knockout matches by local date
+    const koBuckets = {};
+    KNOCKOUT_MATCHES.forEach(m => {
+      const k = localDateKey(m.utc, m.date, offset);
+      (koBuckets[k] = koBuckets[k] || []).push(m);
+    });
+    const koKeys = Object.keys(koBuckets).sort();
+    koKeys.forEach(k => koBuckets[k].sort((a,b) => {
+      return ((a.utc+offset)%24+24)%24 - ((b.utc+offset)%24+24)%24;
+    }));
+
+    // Round label colours
+    const koColors = { R32:'#7A82A8', R16:'#5DADE2', QF:'#A569BD', SF:'#EC407A', '3rd':'#1ABC9C', F:'#C9A84C' };
+    const koPrintColors = { R32:'#555', R16:'#1a5276', QF:'#6c3483', SF:'#b03a7c', '3rd':'#148f77', F:'#b7950b' };
+
+    koKeys.forEach(k => {
+      const hdr = fmtHeader(k);
+      const div = document.createElement('div');
+      div.className = 'day';
+      let html = `<div class="day-header"><span class="day-name">${hdr.name}</span><span class="day-date">${hdr.date}</span></div>`;
+      koBuckets[k].forEach(m => {
+        const t  = formatTime(m.utc + offset);
+        const hi = team !== 'none' && m.teams.includes(team);
+        const cls = hi ? ' highlighted ko-match' : ' ko-match';
+        const grpStyle = `style="color:var(--ko-${m.grp}, #7A82A8)"`;
+        html += `<div class="match${cls}">
+          <span style="font-family:'Barlow Condensed',sans-serif;flex-shrink:0;width:80px;color:${koColors[m.grp]||'#7A82A8'}"><span style="font-weight:700;font-size:17px">${m.grp}</span> <span style="font-weight:400;font-size:14px">${m.num}</span></span>
+          <span class="time">${t}</span>
+          <span class="teams">${m.teams}</span>
+          <span class="venue">${m.venue}</span>
+        </div>`;
+      });
+      div.innerHTML = html;
+      sched.appendChild(div);
+    });
+  }
 
   const sign = offset >= 0 ? '+' : '';
   const frac = offset % 1 !== 0;
@@ -634,6 +761,15 @@ const btn = document.getElementById('mode-toggle');
 btn.addEventListener('click', () => {
   const isPrint = document.body.classList.toggle('print-mode');
   btn.textContent = isPrint ? '\u2600 Switch to Night Mode' : '\u2788 Switch to Print Mode';
+});
+
+// Knockout toggle
+const koBtn = document.getElementById('knockout-toggle');
+koBtn.addEventListener('click', () => {
+  showKnockout = !showKnockout;
+  koBtn.textContent = showKnockout ? 'Hide Knockout Stage' : 'Show Knockout Stage';
+  const s = getState();
+  render(s.offset, s.team);
 });
 
 render(10, 'none');
