@@ -240,7 +240,7 @@
   }
   body.print-mode .schedule { gap: 4px 6px; }
 
-  /* single column on mobile - night mode only */
+  /* coffee buttons + version (defined once, cleanly) */
   #bmc-header {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700; font-size: clamp(11px, 1.5vw, 13px);
@@ -253,23 +253,13 @@
   }
   #bmc-header:hover { opacity: 0.8; }
   body.print-mode #bmc-header { display: none !important; }
-  @media screen and (max-width: 900px) { #bmc-header { display: inline-block; } }
 
-  #version {
-    text-align: center;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-top: 8px;
-    letter-spacing: 1px;
-  }
-  body.print-mode #version { color: #aaa; }
+  #version { color: var(--text-muted); font-style: italic; }
+  body.print-mode #version { color: #888; }
 
   #bmc-mobile {
-    display: none;
-    text-align: center;
-    margin-top: 16px;
-    padding-top: 12px;
+    display: none; text-align: center;
+    margin-top: 16px; padding-top: 12px;
     border-top: 1px solid var(--border);
   }
   #bmc-mobile a {
@@ -284,32 +274,12 @@
   #bmc-mobile a:hover { opacity: 0.8; }
   body.print-mode #bmc-mobile { display: none !important; }
 
+  /* single column + larger text on mobile - night mode only */
   @media screen and (max-width: 900px) {
-    #bmc-header {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700; font-size: clamp(11px, 1.5vw, 13px);
-    letter-spacing: 1px; text-transform: uppercase;
-    color: var(--gold); text-decoration: none;
-    border: 1.5px solid var(--gold);
-    padding: 6px 14px; border-radius: 4px;
-    display: none; white-space: nowrap;
-    transition: opacity 0.2s;
-  }
-  #bmc-header:hover { opacity: 0.8; }
-  body.print-mode #bmc-header { display: none !important; }
-  @media screen and (max-width: 900px) { #bmc-header { display: inline-block; } }
-
-  #version {
-    text-align: center;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-top: 8px;
-    letter-spacing: 1px;
-  }
-  body.print-mode #version { color: #aaa; }
-
-  #bmc-mobile { display: block; }
+    #bmc-header { display: inline-block; }
+    #bmc-mobile { display: block; }
+    /* hide BMC floating widget on mobile */
+    #bmc-wbtn, #bmc-iframe-wrapper, .bmc-btn-container { display: none !important; }
     body:not(.print-mode) .schedule { grid-template-columns: 1fr !important; }
     body:not(.print-mode) .header { flex-direction: column; align-items: flex-start; gap: 10px; }
     body:not(.print-mode) .header-right { align-items: flex-start; text-align: left; width: 100%; }
@@ -427,26 +397,6 @@
   body.print-mode .footer p { font-size: 9px; }
 
   /* ── PRINT MEDIA ─────────────────────────────────────────────────────────── */
-  /* version */
-  #version { color: var(--text-muted); font-style: italic; }
-  body.print-mode #version { color: #888; }
-
-  /* mobile coffee button */
-  #bmc-mobile {
-    display: none; text-align: center;
-    margin-top: 16px; padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-  #bmc-mobile a {
-    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-    font-size: 14px; letter-spacing: 1px; text-transform: uppercase;
-    color: var(--gold); text-decoration: none;
-    border: 1.5px solid var(--gold); padding: 8px 20px;
-    border-radius: 4px; display: inline-block;
-  }
-  #bmc-mobile a:hover { opacity: 0.8; }
-  body.print-mode #bmc-mobile { display: none !important; }
-
   @media print {
     body { background: #fff !important; }
     .page { margin: 0; padding: 8mm 8mm 6mm 8mm; box-shadow: none; width: 210mm; max-width: 210mm; height: auto; overflow: visible; }
@@ -896,13 +846,8 @@ koBtn.addEventListener('click', () => {
 render(10, 'none');
 </script>
 
-<!-- Buy Me a Coffee widget - always loads, hidden on mobile via CSS -->
+<!-- Buy Me a Coffee widget -->
 <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="coolcato" data-description="Support me on Buy me a coffee!" data-message="Please consider buying me a coffee to help me to create more things like this. Enjoy the World Cup!" data-color="#C9A84C" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
-<style>
-  @media screen and (max-width: 900px) {
-    #bmc-widget-btn { display: none !important; }
-  }
-</style>
 
 </body>
 </html>
