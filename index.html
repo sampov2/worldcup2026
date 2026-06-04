@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FIFA World Cup 2026 Schedule - All 104 Matches with Timezone Converter</title>
 <meta name="description" content="Full FIFA World Cup 2026 schedule with all 104 matches. Convert kick-off times to your local timezone including Melbourne, Sydney, London, New York and more. Group stage and knockout rounds.">
 <meta name="keywords" content="FIFA World Cup 2026 schedule, World Cup 2026 fixtures, World Cup 2026 times, World Cup 2026 AEST, World Cup 2026 Melbourne, World Cup 2026 Australia, World Cup 2026 group stage, World Cup 2026 knockout">
@@ -240,8 +241,8 @@
   body.print-mode .schedule { gap: 4px 6px; }
 
   /* single column on mobile - night mode only */
-  @media (max-width: 768px) {
-    body:not(.print-mode) .schedule { grid-template-columns: 1fr; }
+  @media screen and (max-width: 900px) {
+    body:not(.print-mode) .schedule { grid-template-columns: 1fr !important; }
     body:not(.print-mode) .header { flex-direction: column; align-items: flex-start; gap: 10px; }
     body:not(.print-mode) .header-right { align-items: flex-start; text-align: left; width: 100%; }
     body:not(.print-mode) .ctrl-row { flex-wrap: wrap; gap: 6px; }
