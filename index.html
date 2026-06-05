@@ -162,6 +162,32 @@
   body.print-mode select { font-size: 12px; padding: 2px 5px; border-radius: 3px; }
   select:focus { outline: 2px solid var(--highlight-bl); }
 
+  .nav-btn {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: clamp(11px, 1.5vw, 13px);
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 4px; cursor: pointer;
+    border: 1.5px solid var(--ctrl-border);
+    background: var(--ctrl-bg); color: var(--ctrl-text);
+    transition: all 0.2s; white-space: nowrap; text-decoration: none;
+    display: inline-block;
+  }
+  .nav-btn:hover { opacity: 0.8; }
+  body.print-mode .nav-btn { display: none; }
+
+  .nav-btn {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: clamp(11px, 1.5vw, 13px);
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 4px; cursor: pointer;
+    border: 1.5px solid var(--ctrl-border);
+    background: var(--ctrl-bg); color: var(--ctrl-text);
+    transition: all 0.2s; white-space: nowrap; text-decoration: none;
+    display: inline-block;
+  }
+  .nav-btn:hover { opacity: 0.8; }
+  body.print-mode .nav-btn { display: none; }
+
   #mode-toggle {
     font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
     font-size: clamp(11px, 1.5vw, 13px);
@@ -401,7 +427,20 @@
     body { background: #fff !important; }
     .page { margin: 0; padding: 8mm 8mm 6mm 8mm; box-shadow: none; width: 210mm; max-width: 210mm; height: auto; overflow: visible; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    #mode-toggle { display: none; }
+    .nav-btn {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: clamp(11px, 1.5vw, 13px);
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 4px; cursor: pointer;
+    border: 1.5px solid var(--ctrl-border);
+    background: var(--ctrl-bg); color: var(--ctrl-text);
+    transition: all 0.2s; white-space: nowrap; text-decoration: none;
+    display: inline-block;
+  }
+  .nav-btn:hover { opacity: 0.8; }
+  body.print-mode .nav-btn { display: none; }
+
+  #mode-toggle { display: none; }
   }
 </style>
 <!-- Google tag (gtag.js) -->
@@ -421,6 +460,9 @@
     <div>
       <h1>FIFA World Cup 2026</h1>
       <div class="sub">All 104 matches &bull; 11 June &ndash; 19 July &bull; USA / Canada / Mexico</div>
+      <div style="margin-top:8px">
+        <a href="https://kingdoggydog.github.io/worldcup2026/groups.html" class="nav-btn">&#127942; Groups</a>
+      </div>
     </div>
     <div class="header-right">
       <div class="ctrl-row">
