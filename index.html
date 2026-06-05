@@ -274,7 +274,7 @@
     color: var(--gold); text-decoration: none;
     border: 1.5px solid var(--gold);
     padding: 6px 14px; border-radius: 4px;
-    display: none; white-space: nowrap;
+    display: inline-block; white-space: nowrap;
     transition: opacity 0.2s;
   }
   #bmc-header:hover { opacity: 0.8; }
@@ -460,7 +460,8 @@
     <div>
       <h1>FIFA World Cup 2026</h1>
       <div class="sub">All 104 matches &bull; 11 June &ndash; 19 July &bull; USA / Canada / Mexico</div>
-      <div style="margin-top:8px">
+      <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <a href="https://www.buymeacoffee.com/coolcato" target="_blank" id="bmc-header">☕ Buy me a coffee</a>
         <a href="https://kingdoggydog.github.io/worldcup2026/groups.html" class="nav-btn">&#127942; Groups</a>
       </div>
     </div>
@@ -468,7 +469,6 @@
       <div class="ctrl-row">
         <button id="mode-toggle">&#9788; Switch to Print Mode</button>
         <button id="knockout-toggle">Hide Knockout Stage</button>
-        <a href="https://www.buymeacoffee.com/coolcato" target="_blank" id="bmc-header">☕ Buy me a coffee</a>
       </div>
       <div class="ctrl-row">
         <span class="ctrl-label">Timezone</span>
@@ -740,7 +740,7 @@ const FLAGS = {
 function flagImg(team) {
   const code = FLAGS[team];
   if (!code) return '';
-  return `<img class="flag" src="https://flagcdn.com/w20/${code}.png" alt="${team}">`;
+  return `<img class="flag" src="https://flagcdn.com/w20/${code}.png" alt="">`;
 }
 
 function teamsHtml(teamsStr) {
@@ -993,7 +993,7 @@ koBtn.addEventListener('click', () => {
 </script>
 
 <!-- Buy Me a Coffee widget -->
-<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="coolcato" data-description="Support me on Buy me a coffee!" data-message="Please consider buying me a coffee to help me to create more things like this. Enjoy the World Cup!" data-color="#C9A84C" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="coolcato" data-description="Support me on Buy me a coffee!" data-message="" data-color="#C9A84C" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 
 </body>
 </html>
