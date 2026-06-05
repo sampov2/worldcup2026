@@ -433,6 +433,28 @@ const STANDINGS = {
   ],
 };
 
+const FLAGS = {
+  'Algeria':'dz','Argentina':'ar','Australia':'au','Austria':'at',
+  'Belgium':'be','Bosnia':'ba','Brazil':'br','Canada':'ca',
+  'Cape Verde':'cv','Colombia':'co','Congo DR':'cd','Croatia':'hr',
+  'Curacao':'cw','Czechia':'cz','Ecuador':'ec','Egypt':'eg',
+  'England':'gb-eng','France':'fr','Germany':'de','Ghana':'gh',
+  'Haiti':'ht','Iran':'ir','Iraq':'iq','Ivory Coast':'ci',
+  'Japan':'jp','Jordan':'jo','Mexico':'mx','Morocco':'ma',
+  'Netherlands':'nl','New Zealand':'nz','Norway':'no','Panama':'pa',
+  'Paraguay':'py','Portugal':'pt','Qatar':'qa','Saudi Arabia':'sa',
+  'Scotland':'gb-sct','Senegal':'sn','South Africa':'za',
+  'South Korea':'kr','Spain':'es','Sweden':'se','Switzerland':'ch',
+  'Tunisia':'tn','Turkiye':'tr','Uruguay':'uy','USA':'us',
+  'Uzbekistan':'uz',
+};
+
+function flagImg(team) {
+  const code = FLAGS[team];
+  if (!code) return '';
+  return `<img src="https://flagcdn.com/w20/${code}.png" alt="" style="width:16px;height:12px;object-fit:cover;border-radius:1px;vertical-align:middle;margin-right:4px;"> `;
+}
+
 function render(highlightTeam) {
   const grid = document.getElementById('groups-grid');
   grid.innerHTML = '';
@@ -460,7 +482,7 @@ function render(highlightTeam) {
       const pos = i + 1;
       rows += `<tr class="${hiCls}">
         <td class="stat" style="width:20px;padding-left:8px">${pos}</td>
-        <td class="team-name">${name}</td>
+        <td class="team-name">${flagImg(name)}${name}</td>
         <td class="stat">${t[1]}</td>
         <td class="stat">${t[2]}</td>
         <td class="stat">${t[3]}</td>
