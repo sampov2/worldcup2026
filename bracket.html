@@ -300,7 +300,7 @@ function mbox(m, off){
   const tr=(n,ph,w,sc)=>`<div class="mbt2${w?' w':''}${ph?' ph':''}">
     ${!ph?flag(n):''}
     <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${n}</span>
-    ${sc!=null?`<span class="sc">${sc}${w&&suf?`<span style="font-size:9px;color:#8A93B8;font-weight:600">${suf}</span>`:''}</span>`:''}
+    ${sc!=null?`<span class="sc">${sc}${w&&suf?suf:''}</span>`:''}
   </div>`;
   return `<div class="mb${fin?' fin':''}">
     <div class="mbnum"><span>${num}</span><span class="mbt">${dt}</span></div>
