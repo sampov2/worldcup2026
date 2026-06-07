@@ -257,7 +257,9 @@ function mbox(m, off){
   const {h,a,hph,aph}=teams(m);
   const fin=m.status==='FINISHED';
   const hg=m.score?.fullTime?.home, ag=m.score?.fullTime?.away;
-  const hw=fin&&hg>ag, aw=fin&&ag>hg;
+  const winner=m.score?.winner;
+  const hw=fin&&(winner==='HOME_TEAM'||(winner==null&&hg!=null&&hg>ag));
+  const aw=fin&&(winner==='AWAY_TEAM'||(winner==null&&ag!=null&&ag>hg));
   const num=mnums[m.id]||'';
   const dt=fmt(m.utcDate,off);
   const tr=(n,ph,w,sc)=>`<div class="mbt2${w?' w':''}${ph?' ph':''}">
@@ -276,7 +278,9 @@ function mobMatch(m, off){
   const {h,a,hph,aph}=teams(m);
   const fin=m.status==='FINISHED';
   const hg=m.score?.fullTime?.home, ag=m.score?.fullTime?.away;
-  const hw=fin&&hg>ag, aw=fin&&ag>hg;
+  const winner=m.score?.winner;
+  const hw=fin&&(winner==='HOME_TEAM'||(winner==null&&hg!=null&&hg>ag));
+  const aw=fin&&(winner==='AWAY_TEAM'||(winner==null&&ag!=null&&ag>hg));
   const num=mnums[m.id]||'';
   const dt=fmt(m.utcDate,off);
   const tr=(n,ph,w,sc)=>`<div class="mmt${w?' w':''}${ph?' ph':''}">
@@ -302,9 +306,51 @@ function buildNums(){
 
 function render(){
   const off=getOff();
-  const r32=byStage('LAST_32'), r16=byStage('LAST_16');
-  const qf=byStage('QUARTER_FINALS'), sf=byStage('SEMI_FINALS');
+  const sf=byStage('SEMI_FINALS');
   const fin=byStage('FINAL'), tp=byStage('THIRD_PLACE');
+
+  // Build ordered arrays by explicit match ID order so bracket flows correctly
+  // Match ID -> Match Number mapping (sorted by utcDate):
+  // M73=537417 M74=537423 M75=537415 M76=537418 M77=537424 M78=537416
+  // M79=537425 M80=537426 M81=537422 M82=537421 M83=537420 M84=537419
+  // M85=537429 M86=537428 M87=537427 M88=537430
+  // M89=537376 M90=537375 M91=537377 M92=537378
+  // M93=537379 M94=537380 M95=537381 M96=537382
+  // M97=537383 M98=537384 M99=537385 M100=537386
+
+  function mById(id){ return matches.find(m=>m.id===id); }
+
+  // R32 left side pairs (top feeds M89, then M90, M91, M92)
+  const r32L=[
+    mById(537417),mById(537415), // M73+M75 -> M89
+    mById(537423),mById(537424), // M74+M77 -> M90
+    mById(537418),mById(537416), // M76+M78 -> M91
+    mById(537425),mById(537426), // M79+M80 -> M92
+  ].filter(Boolean);
+
+  // R32 right side pairs (M93, M94, M95, M96)
+  const r32R=[
+    mById(537422),mById(537421), // M81+M82 -> M93
+    mById(537420),mById(537419), // M83+M84 -> M94
+    mById(537429),mById(537428), // M85+M86 -> M95
+    mById(537427),mById(537430), // M87+M88 -> M96
+  ].filter(Boolean);
+
+  // R16 left side pairs (M89+M90 -> M97, M91+M92 -> M98)
+  const r16L=[
+    mById(537376),mById(537375), // M89+M90 -> M97
+    mById(537377),mById(537378), // M91+M92 -> M98
+  ].filter(Boolean);
+
+  // R16 right side pairs (M93+M94 -> M99, M95+M96 -> M100)
+  const r16R=[
+    mById(537379),mById(537380), // M93+M94 -> M99
+    mById(537381),mById(537382), // M95+M96 -> M100
+  ].filter(Boolean);
+
+  // QF left (M97+M98 -> M101), QF right (M99+M100 -> M102)
+  const qfL=[mById(537383),mById(537384)].filter(Boolean); // M97,M98
+  const qfR=[mById(537385),mById(537386)].filter(Boolean); // M99,M100
 
   // Desktop - split left/right
   const col=(ms,lbl)=>`<div class="bcol">
@@ -315,7 +361,8 @@ function render(){
   const finM=fin[0], tpM=tp[0];
   const finT=finM?teams(finM):null;
   const champ=finM?.status==='FINISHED'
-    ? (finM.score.fullTime.home>finM.score.fullTime.away ? finT.h : finT.a) : '';
+    ? (finM.score?.winner==='HOME_TEAM' ? finT.h : finM.score?.winner==='AWAY_TEAM' ? finT.a :
+       finM.score.fullTime.home>finM.score.fullTime.away ? finT.h : finT.a) : '';
 
   const fcol=`<div class="bcol fcol">
     <div class="blbl">Final</div>
@@ -326,27 +373,27 @@ function render(){
   </div>`;
 
   document.getElementById('bdesk').innerHTML =
-    col(r32.slice(0,8),'Round of 32') +
-    col(r16.slice(0,4),'Round of 16') +
-    col(qf.slice(0,2),'Quarter-finals') +
+    col(r32L,'Round of 32') +
+    col(r16L,'Round of 16') +
+    col(qfL,'Quarter-finals') +
     col(sf.slice(0,1),'Semi-finals') +
     fcol +
     col(sf.slice(1),'Semi-finals') +
-    col(qf.slice(2),'Quarter-finals') +
-    col(r16.slice(4),'Round of 16') +
-    col(r32.slice(8),'Round of 32');
+    col(qfR,'Quarter-finals') +
+    col(r16R,'Round of 16') +
+    col(r32R,'Round of 32');
 
   // Mobile
   // R32 - render as pairs that feed same R16 match
   const r32pairs = [
-    { r16:'M89', matches:[537417,537415] },
-    { r16:'M90', matches:[537423,537416] },
-    { r16:'M91', matches:[537418,537424] },
-    { r16:'M92', matches:[537425,537426] },
-    { r16:'M93', matches:[537422,537421] },
-    { r16:'M94', matches:[537420,537419] },
-    { r16:'M95', matches:[537429,537428] },
-    { r16:'M96', matches:[537427,537430] },
+    { r16:'M89', matches:[537417,537415] }, // M73+M75
+    { r16:'M90', matches:[537423,537424] }, // M74+M77
+    { r16:'M91', matches:[537418,537416] }, // M76+M78
+    { r16:'M92', matches:[537425,537426] }, // M79+M80
+    { r16:'M93', matches:[537422,537421] }, // M81+M82
+    { r16:'M94', matches:[537420,537419] }, // M83+M84
+    { r16:'M95', matches:[537429,537428] }, // M85+M86
+    { r16:'M96', matches:[537427,537430] }, // M87+M88
   ];
   const r32El = document.getElementById('mr32');
   if(r32El){
@@ -371,10 +418,10 @@ function render(){
 
   // R16 pairs - each pair feeds a QF match
   const r16pairs = [
-    { next:'M97', matches:[537376,537375] },
-    { next:'M98', matches:[537377,537378] },
-    { next:'M99', matches:[537379,537380] },
-    { next:'M100', matches:[537381,537382] },
+    { next:'M97',  matches:[537376,537375] }, // M89+M90
+    { next:'M98',  matches:[537377,537378] }, // M91+M92
+    { next:'M99',  matches:[537379,537380] }, // M93+M94
+    { next:'M100', matches:[537381,537382] }, // M95+M96
   ];
   const r16El = document.getElementById('mr16');
   if(r16El){
@@ -399,8 +446,8 @@ function render(){
 
   // QF pairs - each pair feeds a SF match
   const qfpairs = [
-    { next:'M101', matches:[537383,537384] },
-    { next:'M102', matches:[537385,537386] },
+    { next:'M101', matches:[537383,537384] }, // M97+M98
+    { next:'M102', matches:[537385,537386] }, // M99+M100
   ];
   const qfEl = document.getElementById('mrqf');
   if(qfEl){
@@ -428,7 +475,7 @@ function render(){
   if(sfEl){
     const sfById = {};
     sf.forEach(m => sfById[m.id] = m);
-    const m1 = sfById[537387], m2 = sfById[537388];
+    const m1 = sf.find(m=>m.id===537387), m2 = sf.find(m=>m.id===537388);
     sfEl.innerHTML = `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
         Winners meet in <span style="color:var(--gold)">M104 The Final</span>
