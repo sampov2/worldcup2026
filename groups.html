@@ -253,8 +253,10 @@
     <div>
       <h1>FIFA World Cup 2026</h1>
       <div class="sub">Group Stage Draw &bull; 12 Groups &bull; 48 Teams</div>
-      <div style="margin-top:8px">
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
         <a href="https://kingdoggydog.github.io/worldcup2026/" class="nav-btn">&#128197; Schedule</a>
+        <a href="https://kingdoggydog.github.io/worldcup2026/groups.html" class="nav-btn active">&#128202; Groups</a>
+        <a href="https://kingdoggydog.github.io/worldcup2026/bracket.html" class="nav-btn">&#127942; Knockout</a>
       </div>
     </div>
     <div class="header-right">
@@ -589,8 +591,19 @@ async function loadAndRender() {
 }
 
 document.getElementById('team-select').addEventListener('change', function() {
+  try { localStorage.setItem('wc2026_highlight', this.value); } catch(e) {}
   render(this.value, lastData);
 });
+
+// Restore saved highlight
+try {
+  const saved = localStorage.getItem('wc2026_highlight');
+  if (saved) {
+    const sel = document.getElementById('team-select');
+    const opt = Array.from(sel.options).find(o => o.value === saved);
+    if (opt) { sel.value = saved; currentHighlight = saved; }
+  }
+} catch(e) {}
 
 // Initial load + refresh every 60 seconds
 loadAndRender();
