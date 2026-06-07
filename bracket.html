@@ -74,12 +74,12 @@ select{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;
 .mround.on{display:flex;}
 .mm{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
 .mm.fin{border-color:var(--win);}
-.mmh{display:flex;justify-content:space-between;padding:5px 12px;border-bottom:1px solid var(--border);font-size:11px;color:var(--muted);}
-.mmh .mnum{color:var(--gold);font-weight:700;}
-.mmt{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border);font-size:15px;font-weight:600;}
+.mmh{display:flex;justify-content:space-between;padding:4px 10px;border-bottom:1px solid var(--border);font-size:11px;color:#8A93B8;font-weight:600;}
+.mmh .mnum{color:var(--gold);font-weight:800;font-size:12px;}
+.mmt{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid var(--border);font-size:14px;font-weight:600;}
 .mmt:last-of-type{border-bottom:none;}
 .mmt.w{color:var(--win);background:rgba(46,204,113,.08);}
-.mmt.ph{color:var(--muted);font-style:italic;font-weight:400;font-size:13px;}
+.mmt.ph{color:#8A93B8;font-style:normal;font-weight:700;font-size:13px;}
 .mmt .sc{margin-left:auto;font-weight:800;}
 .mmt img{width:18px;height:13px;object-fit:cover;border-radius:2px;}
 
@@ -137,8 +137,8 @@ select{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;
 
 <!-- MOBILE TABS -->
 <div class="tabs">
-  <button class="tab on" data-r="r32">R32</button>
-  <button class="tab" data-r="r16">R16</button>
+  <button class="tab on" data-r="32">R32</button>
+  <button class="tab" data-r="16">R16</button>
   <button class="tab" data-r="qf">QF</button>
   <button class="tab" data-r="sf">SF</button>
   <button class="tab" data-r="fin">Final</button>
@@ -338,7 +338,21 @@ function render(){
     col(r32.slice(8),'Round of 32');
 
   // Mobile
-  const stages={mr32:r32,mr16:r16,mrqf:qf,mrsf:sf,mrfin:[...fin,...tp]};
+  const stages={mr32:r32,mr16:r16,mrqf:qf,mrsf:sf};
+  // Handle final tab separately with labels
+  const finEl=document.getElementById('mrfin');
+  if(finEl){
+    let html='';
+    if(fin.length){
+      html+=`<div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:4px;">🏆 Final</div>`;
+      html+=fin.map(m=>mobMatch(m,off)).join('');
+    }
+    if(tp.length){
+      html+=`<div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--sub);padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:4px;margin-top:12px;">3rd Place Play-off</div>`;
+      html+=tp.map(m=>mobMatch(m,off)).join('');
+    }
+    finEl.innerHTML=html;
+  }
   Object.entries(stages).forEach(([id,ms])=>{
     const el=document.getElementById(id);
     if(el) el.innerHTML=ms.map(m=>mobMatch(m,off)).join('');
@@ -355,7 +369,9 @@ document.querySelectorAll('.tab').forEach(b=>{
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
     document.querySelectorAll('.mround').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');
-    document.getElementById('mr'+b.dataset.r).classList.add('on');
+    const rid = b.dataset.r;
+    const el = document.getElementById('mr'+rid) || document.getElementById('mr'+rid.replace('r',''));
+    if(el) el.classList.add('on');
   });
 });
 
