@@ -397,10 +397,8 @@ function render(){
   ];
   const r32El = document.getElementById('mr32');
   if(r32El){
-    const r32ById = {};
-    r32.forEach(m => r32ById[m.id] = m);
     r32El.innerHTML = r32pairs.map(pair => {
-      const [m1, m2] = pair.matches.map(id => r32ById[id]).filter(Boolean);
+      const [m1, m2] = pair.matches.map(id => mById(id)).filter(Boolean);
       if(!m1 && !m2) return '';
       return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
@@ -425,10 +423,8 @@ function render(){
   ];
   const r16El = document.getElementById('mr16');
   if(r16El){
-    const r16ById = {};
-    r16.forEach(m => r16ById[m.id] = m);
     r16El.innerHTML = r16pairs.map(pair => {
-      const [m1, m2] = pair.matches.map(id => r16ById[id]).filter(Boolean);
+      const [m1, m2] = pair.matches.map(id => mById(id)).filter(Boolean);
       if(!m1 && !m2) return '';
       return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
@@ -451,10 +447,8 @@ function render(){
   ];
   const qfEl = document.getElementById('mrqf');
   if(qfEl){
-    const qfById = {};
-    qf.forEach(m => qfById[m.id] = m);
     qfEl.innerHTML = qfpairs.map(pair => {
-      const [m1, m2] = pair.matches.map(id => qfById[id]).filter(Boolean);
+      const [m1, m2] = pair.matches.map(id => mById(id)).filter(Boolean);
       if(!m1 && !m2) return '';
       return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
@@ -473,9 +467,7 @@ function render(){
   // SF pair - winners meet in the Final
   const sfEl = document.getElementById('mrsf');
   if(sfEl){
-    const sfById = {};
-    sf.forEach(m => sfById[m.id] = m);
-    const m1 = sf.find(m=>m.id===537387), m2 = sf.find(m=>m.id===537388);
+    const m1 = mById(537387), m2 = mById(537388);
     sfEl.innerHTML = `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
         Winners meet in <span style="color:var(--gold)">M104 The Final</span>
@@ -492,14 +484,15 @@ function render(){
   // Handle final tab separately with labels
   const finEl=document.getElementById('mrfin');
   if(finEl){
+    const finMatches=byStage('FINAL'), tpMatches=byStage('THIRD_PLACE');
     let html='';
-    if(fin.length){
+    if(finMatches.length){
       html+=`<div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:4px;">🏆 Final</div>`;
-      html+=fin.map(m=>mobMatch(m,off)).join('');
+      html+=finMatches.map(m=>mobMatch(m,off)).join('');
     }
-    if(tp.length){
+    if(tpMatches.length){
       html+=`<div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--sub);padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:4px;margin-top:12px;">3rd Place Play-off</div>`;
-      html+=tp.map(m=>mobMatch(m,off)).join('');
+      html+=tpMatches.map(m=>mobMatch(m,off)).join('');
     }
     finEl.innerHTML=html;
   }
