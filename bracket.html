@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFA World Cup 2026 - Bracket</title>
+<style>
+body { background:#0A0E1A; color:#E8EAF2; font-family:sans-serif; padding:20px; }
+h1 { color:#C9A84C; }
+.test { color:#2ECC71; margin-top:20px; }
+</style>
+</head>
+<body>
+<h1>Bracket Test Page</h1>
+<div class="test">If you can see this, the page is loading correctly.</div>
+<div id="out" style="margin-top:20px;color:#7A82A8"></div>
+<script>
+document.getElementById('out').textContent = 'JavaScript is working.';
+fetch('data.json')
+  .then(r => r.json())
+  .then(d => {
+    const ko = d.matches.filter(m => m.stage !== 'GROUP_STAGE');
+    document.getElementById('out').textContent = 'JavaScript working. data.json loaded. Knockout matches: ' + ko.length;
+  })
+  .catch(e => {
+    document.getElementById('out').textContent = 'data.json error: ' + e.message;
+  });
+</script>
+</body>
+</html>
