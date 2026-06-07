@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FIFA World Cup 2026 - Knockout Bracket</title>
+<title>FIFA World Cup 2026 - Knockout</title>
 <meta name="description" content="FIFA World Cup 2026 knockout bracket. Round of 32 through to the Final, updated live.">
 <link rel="canonical" href="https://kingdoggydog.github.io/worldcup2026/bracket.html">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-N0ENDBHCS4"></script>
@@ -72,7 +72,7 @@ select{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;
 .bmob{display:none;}
 .mround{display:none;flex-direction:column;gap:8px;}
 .mround.on{display:flex;}
-.mm{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.mm{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;} .mm.inpair{border-radius:0;border:none;border-bottom:1px solid var(--border);}
 .mm.fin{border-color:var(--win);}
 .mmh{display:flex;justify-content:space-between;padding:4px 10px;border-bottom:1px solid var(--border);font-size:11px;color:#8A93B8;font-weight:600;}
 .mmh .mnum{color:var(--gold);font-weight:800;font-size:12px;}
@@ -100,7 +100,7 @@ select{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;
 <div class="hdr">
   <div>
     <h1>FIFA World Cup 2026</h1>
-    <div class="sub">Knockout Bracket · Round of 32 to Final</div>
+    <div class="sub">Knockout · Round of 32 to Final</div>
     <div class="nav">
       <a href="https://kingdoggydog.github.io/worldcup2026/" class="nbtn">📅 Schedule</a>
       <a href="https://kingdoggydog.github.io/worldcup2026/groups.html" class="nbtn">🏆 Groups</a>
@@ -337,7 +337,111 @@ function render(){
     col(r32.slice(8),'Round of 32');
 
   // Mobile
-  const stages={mr32:r32,mr16:r16,mrqf:qf,mrsf:sf};
+  // R32 - render as pairs that feed same R16 match
+  const r32pairs = [
+    { r16:'M89', matches:[537417,537415] },
+    { r16:'M90', matches:[537423,537416] },
+    { r16:'M91', matches:[537418,537424] },
+    { r16:'M92', matches:[537425,537426] },
+    { r16:'M93', matches:[537422,537421] },
+    { r16:'M94', matches:[537420,537419] },
+    { r16:'M95', matches:[537429,537428] },
+    { r16:'M96', matches:[537427,537430] },
+  ];
+  const r32El = document.getElementById('mr32');
+  if(r32El){
+    const r32ById = {};
+    r32.forEach(m => r32ById[m.id] = m);
+    r32El.innerHTML = r32pairs.map(pair => {
+      const [m1, m2] = pair.matches.map(id => r32ById[id]).filter(Boolean);
+      if(!m1 && !m2) return '';
+      return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
+          winners meet in <span style="color:var(--gold)">${pair.r16}</span>
+        </div>
+        ${m1 ? mobMatch(m1, off) : ''}
+        <div style="display:flex;align-items:center;padding:0 0 0 12px;border-top:1px solid var(--border);background:rgba(42,48,80,0.4);">
+          <div style="width:2px;height:28px;background:var(--gold);border-radius:1px;flex-shrink:0;margin-right:8px;"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1px;">Winners play each other in <span style="color:#E8EAF2">${pair.r16}</span></span>
+        </div>
+        ${m2 ? mobMatch(m2, off) : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // R16 pairs - each pair feeds a QF match
+  const r16pairs = [
+    { next:'M97', matches:[537376,537375] },
+    { next:'M98', matches:[537377,537378] },
+    { next:'M99', matches:[537379,537380] },
+    { next:'M100', matches:[537381,537382] },
+  ];
+  const r16El = document.getElementById('mr16');
+  if(r16El){
+    const r16ById = {};
+    r16.forEach(m => r16ById[m.id] = m);
+    r16El.innerHTML = r16pairs.map(pair => {
+      const [m1, m2] = pair.matches.map(id => r16ById[id]).filter(Boolean);
+      if(!m1 && !m2) return '';
+      return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
+          Winners meet in <span style="color:var(--gold)">${pair.next}</span>
+        </div>
+        ${m1 ? mobMatch(m1, off) : ''}
+        <div style="display:flex;align-items:center;padding:0 0 0 12px;border-top:1px solid var(--border);background:rgba(42,48,80,0.4);">
+          <div style="width:2px;height:28px;background:var(--gold);border-radius:1px;flex-shrink:0;margin-right:8px;"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1px;">Winners play each other in <span style="color:#E8EAF2">${pair.next}</span></span>
+        </div>
+        ${m2 ? mobMatch(m2, off) : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // QF pairs - each pair feeds a SF match
+  const qfpairs = [
+    { next:'M101', matches:[537383,537384] },
+    { next:'M102', matches:[537385,537386] },
+  ];
+  const qfEl = document.getElementById('mrqf');
+  if(qfEl){
+    const qfById = {};
+    qf.forEach(m => qfById[m.id] = m);
+    qfEl.innerHTML = qfpairs.map(pair => {
+      const [m1, m2] = pair.matches.map(id => qfById[id]).filter(Boolean);
+      if(!m1 && !m2) return '';
+      return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
+          Winners meet in <span style="color:var(--gold)">${pair.next}</span>
+        </div>
+        ${m1 ? mobMatch(m1, off) : ''}
+        <div style="display:flex;align-items:center;padding:0 0 0 12px;border-top:1px solid var(--border);background:rgba(42,48,80,0.4);">
+          <div style="width:2px;height:28px;background:var(--gold);border-radius:1px;flex-shrink:0;margin-right:8px;"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1px;">Winners play each other in <span style="color:#E8EAF2">${pair.next}</span></span>
+        </div>
+        ${m2 ? mobMatch(m2, off) : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // SF pair - winners meet in the Final
+  const sfEl = document.getElementById('mrsf');
+  if(sfEl){
+    const sfById = {};
+    sf.forEach(m => sfById[m.id] = m);
+    const m1 = sfById[537387], m2 = sfById[537388];
+    sfEl.innerHTML = `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 10px;border-bottom:1px solid var(--border);text-align:right;">
+        Winners meet in <span style="color:var(--gold)">M104 The Final</span>
+      </div>
+      ${m1 ? mobMatch(m1, off) : ''}
+      <div style="display:flex;align-items:center;padding:0 0 0 12px;border-top:1px solid var(--border);background:rgba(42,48,80,0.4);">
+        <div style="width:2px;height:28px;background:var(--gold);border-radius:1px;flex-shrink:0;margin-right:8px;"></div>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1px;">Winners play each other in <span style="color:#E8EAF2">M104 The Final</span></span>
+      </div>
+      ${m2 ? mobMatch(m2, off) : ''}
+    </div>`;
+  }
+
   // Handle final tab separately with labels
   const finEl=document.getElementById('mrfin');
   if(finEl){
