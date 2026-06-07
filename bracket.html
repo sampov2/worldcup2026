@@ -180,7 +180,7 @@ const FLAGS = {
   'South Korea':'kr','Spain':'es','Sweden':'se','Switzerland':'ch','Tunisia':'tn',
   'Turkiye':'tr','Uruguay':'uy','USA':'us','Uzbekistan':'uz'
 };
-const FEEDERS = {537376: ['M73', 'M75'], 537375: ['M74', 'M77'], 537377: ['M76', 'M78'], 537378: ['M79', 'M80'], 537379: ['M81', 'M82'], 537380: ['M83', 'M84'], 537381: ['M85', 'M86'], 537382: ['M87', 'M88'], 537383: ['M89', 'M90'], 537384: ['M91', 'M92'], 537385: ['M93', 'M94'], 537386: ['M95', 'M96'], 537387: ['M97', 'M98'], 537388: ['M99', 'M100'], 537390: ['M101', 'M102'], 537389: ['M101', 'M102']};
+const FEEDERS = {537376:['M74','M77'],537375:['M73','M75'],537377:['M76','M78'],537378:['M79','M80'],537379:['M83','M84'],537380:['M81','M82'],537381:['M86','M88'],537382:['M85','M87'],537383:['M89','M90'],537384:['M93','M94'],537385:['M91','M92'],537386:['M95','M96'],537387:['M97','M98'],537388:['M99','M100'],537390:['M101','M102'],537389:['M101','M102']};
 
 const PH = {
   537417:['2nd A','2nd B'],      537423:['Win C','2nd F'],
@@ -253,6 +253,14 @@ function teams(m){
   return { h:hn||phh, a:an||pha, hph:!hn, aph:!an };
 }
 
+function getExtra(m){
+  if(m.status!=='FINISHED') return '';
+  const d=m.score?.duration;
+  if(d==='PENALTY_SHOOTOUT') return ' <span style="font-size:8px;color:#8A93B8">(pens)</span>';
+  if(d==='EXTRA_TIME') return ' <span style="font-size:8px;color:#8A93B8">(aet)</span>';
+  return '';
+}
+
 function mbox(m, off){
   const {h,a,hph,aph}=teams(m);
   const fin=m.status==='FINISHED';
@@ -322,29 +330,27 @@ function render(){
 
   // R32 left side pairs (top feeds M89, then M90, M91, M92)
   const r32L=[
-    mById(537417),mById(537415), // M73+M75 -> M89
-    mById(537423),mById(537424), // M74+M77 -> M90
+    mById(537417),mById(537415), // M73+M75 -> M90
+    mById(537423),mById(537424), // M74+M77 -> M89
     mById(537418),mById(537416), // M76+M78 -> M91
     mById(537425),mById(537426), // M79+M80 -> M92
   ].filter(Boolean);
 
-  // R32 right side pairs (M93, M94, M95, M96)
   const r32R=[
-    mById(537422),mById(537421), // M81+M82 -> M93
-    mById(537420),mById(537419), // M83+M84 -> M94
-    mById(537429),mById(537428), // M85+M86 -> M95
-    mById(537427),mById(537430), // M87+M88 -> M96
+    mById(537422),mById(537421), // M81+M82 -> M94
+    mById(537420),mById(537419), // M83+M84 -> M93
+    mById(537428),mById(537430), // M86+M88 -> M95
+    mById(537429),mById(537427), // M85+M87 -> M96
   ].filter(Boolean);
 
   // R16 left side pairs (M89+M90 -> M97, M91+M92 -> M98)
   const r16L=[
-    mById(537376),mById(537375), // M89+M90 -> M97
-    mById(537377),mById(537378), // M91+M92 -> M98
+    mById(537375),mById(537376), // M90+M89 -> M97
+    mById(537380),mById(537379), // M94+M93 -> M98
   ].filter(Boolean);
 
-  // R16 right side pairs (M93+M94 -> M99, M95+M96 -> M100)
   const r16R=[
-    mById(537379),mById(537380), // M93+M94 -> M99
+    mById(537377),mById(537378), // M91+M92 -> M99
     mById(537381),mById(537382), // M95+M96 -> M100
   ].filter(Boolean);
 
@@ -386,14 +392,14 @@ function render(){
   // Mobile
   // R32 - render as pairs that feed same R16 match
   const r32pairs = [
-    { r16:'M89', matches:[537417,537415] }, // M73+M75
-    { r16:'M90', matches:[537423,537424] }, // M74+M77
-    { r16:'M91', matches:[537418,537416] }, // M76+M78
-    { r16:'M92', matches:[537425,537426] }, // M79+M80
-    { r16:'M93', matches:[537422,537421] }, // M81+M82
-    { r16:'M94', matches:[537420,537419] }, // M83+M84
-    { r16:'M95', matches:[537429,537428] }, // M85+M86
-    { r16:'M96', matches:[537427,537430] }, // M87+M88
+    { r16:'M90', matches:[537417,537415] }, // M73+M75 -> M90
+    { r16:'M89', matches:[537423,537424] }, // M74+M77 -> M89
+    { r16:'M91', matches:[537418,537416] }, // M76+M78 -> M91
+    { r16:'M92', matches:[537425,537426] }, // M79+M80 -> M92
+    { r16:'M93', matches:[537420,537419] }, // M83+M84 -> M93
+    { r16:'M94', matches:[537422,537421] }, // M81+M82 -> M94
+    { r16:'M95', matches:[537428,537430] }, // M86+M88 -> M95
+    { r16:'M96', matches:[537429,537427] }, // M85+M87 -> M96
   ];
   const r32El = document.getElementById('mr32');
   if(r32El){
@@ -416,9 +422,9 @@ function render(){
 
   // R16 pairs - each pair feeds a QF match
   const r16pairs = [
-    { next:'M97',  matches:[537376,537375] }, // M89+M90
-    { next:'M98',  matches:[537377,537378] }, // M91+M92
-    { next:'M99',  matches:[537379,537380] }, // M93+M94
+    { next:'M97',  matches:[537375,537376] }, // M89+M90
+    { next:'M98',  matches:[537380,537379] }, // M91+M92
+    { next:'M99',  matches:[537377,537378] }, // M93+M94
     { next:'M100', matches:[537381,537382] }, // M95+M96
   ];
   const r16El = document.getElementById('mr16');
