@@ -180,7 +180,31 @@ const FLAGS = {
   'South Korea':'kr','Spain':'es','Sweden':'se','Switzerland':'ch','Tunisia':'tn',
   'Turkiye':'tr','Uruguay':'uy','USA':'us','Uzbekistan':'uz'
 };
-const FEEDERS = {537376:['M74','M77'],537375:['M73','M75'],537377:['M76','M78'],537378:['M79','M80'],537379:['M83','M84'],537380:['M81','M82'],537381:['M86','M88'],537382:['M85','M87'],537383:['M89','M90'],537384:['M93','M94'],537385:['M91','M92'],537386:['M95','M96'],537387:['M97','M98'],537388:['M99','M100'],537390:['M101','M102'],537389:['M101','M102']};
+const FEEDERS = {
+  537376:['M74','M77'],537375:['M73','M75'],537377:['M76','M78'],537378:['M79','M80'],
+  537379:['M83','M84'],537380:['M81','M82'],537381:['M86','M88'],537382:['M85','M87'],
+  537383:['M89','M90'],537384:['M93','M94'],537385:['M91','M92'],537386:['M95','M96'],
+  537387:['M97','M98'],537388:['M99','M100'],537390:['M101','M102'],537389:['M101','M102'],
+};
+// R32 group placeholders (Wikipedia official)
+const R32_PH = {
+  537417: ['2nd Group A', '2nd Group B'],
+  537423: ['Win Group E', '3rd A/B/C/D/F'],
+  537415: ['Win Group F', '2nd Group C'],
+  537418: ['Win Group C', '2nd Group F'],
+  537424: ['Win Group I', '3rd C/D/F/G/H'],
+  537416: ['2nd Group E', '2nd Group I'],
+  537425: ['Win Group A', '3rd C/E/F/H/I'],
+  537426: ['Win Group L', '3rd E/H/I/J/K'],
+  537422: ['Win Group D', '3rd B/E/F/I/J'],
+  537421: ['Win Group G', '3rd A/E/H/I/J'],
+  537420: ['2nd Group K', '2nd Group L'],
+  537419: ['Win Group H', '2nd Group J'],
+  537429: ['Win Group B', '3rd E/F/G/I/J'],
+  537428: ['Win Group J', '2nd Group H'],
+  537427: ['Win Group K', '3rd D/E/I/J/L'],
+  537430: ['2nd Group D', '2nd Group G'],
+};
 
 const PH = {
   537417:['2nd A','2nd B'],      537423:['Win C','2nd F'],
@@ -238,17 +262,19 @@ function teams(m){
   const h=m.homeTeam?.shortName||m.homeTeam?.name;
   const a=m.awayTeam?.shortName||m.awayTeam?.name;
   const hn=h?norm(h):null, an=a?norm(a):null;
-  // For R16 onwards use "Win M73" style placeholders
-  const feeders=FEEDERS[m.id];
   let phh, pha;
-  if(feeders){
-    phh='Win '+feeders[0];
-    pha='Win '+feeders[1];
-    // 3rd place uses losers
-    if(m.stage==='THIRD_PLACE'){phh='Loss M101';pha='Loss M102';}
-  } else {
-    const ph=PH[m.id]||['TBD','TBD'];
+  if(m.stage==='LAST_32'){
+    const ph=R32_PH[m.id]||['TBD','TBD'];
     phh=ph[0]; pha=ph[1];
+  } else {
+    const feeders=FEEDERS[m.id];
+    if(feeders){
+      phh='Win '+feeders[0];
+      pha='Win '+feeders[1];
+      if(m.stage==='THIRD_PLACE'){phh='Loss '+feeders[0];pha='Loss '+feeders[1];}
+    } else {
+      phh='TBD'; pha='TBD';
+    }
   }
   return { h:hn||phh, a:an||pha, hph:!hn, aph:!an };
 }
@@ -329,24 +355,26 @@ function render(){
   function mById(id){ return matches.find(m=>m.id===id); }
 
   // R32 left side pairs (top feeds M89, then M90, M91, M92)
+  // Left side: M73-M80 (ordered so pairs feeding same R16 are adjacent)
   const r32L=[
-    mById(537417),mById(537415), // M73+M75 -> M90
     mById(537423),mById(537424), // M74+M77 -> M89
-    mById(537418),mById(537416), // M76+M78 -> M91
-    mById(537425),mById(537426), // M79+M80 -> M92
+    mById(537417),mById(537415), // M73+M75 -> M90
+    mById(537420),mById(537419), // M83+M84 -> M93
+    mById(537422),mById(537421), // M81+M82 -> M94
   ].filter(Boolean);
 
+  // Right side: M81-M88 (ordered so pairs feeding same R16 are adjacent)
   const r32R=[
-    mById(537422),mById(537421), // M81+M82 -> M94
-    mById(537420),mById(537419), // M83+M84 -> M93
+    mById(537418),mById(537416), // M76+M78 -> M91
+    mById(537425),mById(537426), // M79+M80 -> M92
     mById(537428),mById(537430), // M86+M88 -> M95
     mById(537429),mById(537427), // M85+M87 -> M96
   ].filter(Boolean);
 
   // R16 left side pairs (M89+M90 -> M97, M91+M92 -> M98)
   const r16L=[
-    mById(537375),mById(537376), // M90+M89 -> M97
-    mById(537380),mById(537379), // M94+M93 -> M98
+    mById(537376),mById(537375), // M89+M90 -> M97
+    mById(537379),mById(537380), // M93+M94 -> M98
   ].filter(Boolean);
 
   const r16R=[
@@ -392,12 +420,12 @@ function render(){
   // Mobile
   // R32 - render as pairs that feed same R16 match
   const r32pairs = [
-    { r16:'M90', matches:[537417,537415] }, // M73+M75 -> M90
     { r16:'M89', matches:[537423,537424] }, // M74+M77 -> M89
-    { r16:'M91', matches:[537418,537416] }, // M76+M78 -> M91
-    { r16:'M92', matches:[537425,537426] }, // M79+M80 -> M92
+    { r16:'M90', matches:[537417,537415] }, // M73+M75 -> M90
     { r16:'M93', matches:[537420,537419] }, // M83+M84 -> M93
     { r16:'M94', matches:[537422,537421] }, // M81+M82 -> M94
+    { r16:'M91', matches:[537418,537416] }, // M76+M78 -> M91
+    { r16:'M92', matches:[537425,537426] }, // M79+M80 -> M92
     { r16:'M95', matches:[537428,537430] }, // M86+M88 -> M95
     { r16:'M96', matches:[537429,537427] }, // M85+M87 -> M96
   ];
@@ -422,8 +450,8 @@ function render(){
 
   // R16 pairs - each pair feeds a QF match
   const r16pairs = [
-    { next:'M97',  matches:[537375,537376] }, // M89+M90
-    { next:'M98',  matches:[537380,537379] }, // M91+M92
+    { next:'M97',  matches:[537376,537375] }, // M89+M90
+    { next:'M98',  matches:[537379,537380] }, // M91+M92
     { next:'M99',  matches:[537377,537378] }, // M93+M94
     { next:'M100', matches:[537381,537382] }, // M95+M96
   ];
