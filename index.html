@@ -411,7 +411,7 @@
     /* colour applied by hi-1, hi-2, hi-3, hi-4 classes */
   }
   .match.hi-1 { background: var(--highlight-bg);   border-left-color: var(--highlight-bl); }
-  .match.hi-2 { background: rgba(100,210,255,0.12); border-left-color: #64D2FF; }
+  .match.hi-2 { background: rgba(41,182,246,0.18); border-left-color: #29B6F6; }
   .match.hi-3 { background: rgba(155,89,182,0.12);  border-left-color: #9B59B6; }
   .match.hi-4 { background: rgba(255,159,64,0.12);  border-left-color: #FF9F40; }
 
@@ -1030,7 +1030,7 @@ function render(offset, team) {
 }
 
 // Global highlights array - up to 4 teams
-const HL_COLORS = ['#2ECC71','#64D2FF','#9B59B6','#FF9F40'];
+const HL_COLORS = ['#2ECC71','#29B6F6','#9B59B6','#FF9F40'];
 let _highlightTeams = ['none','none','none','none'];
 try {
   const _saved = localStorage.getItem('wc2026_highlights');
