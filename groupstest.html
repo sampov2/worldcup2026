@@ -274,18 +274,61 @@
       </div>
     </div>
     <div class="header-right">
+      <div class="ctrl-row">
+        <span class="ctrl-label">Timezone</span>
+        <select id="tz-select">
+          <option value="12">Auckland (NZST, UTC+12)</option>
+          <option value="11">Solomon Islands (UTC+11)</option>
+          <option value="10">Melbourne / Sydney (AEST, UTC+10)</option>
+          <option value="10">Brisbane (AEST, UTC+10)</option>
+          <option value="9.5">Adelaide (ACST, UTC+9:30)</option>
+          <option value="9.5">Darwin (ACST, UTC+9:30)</option>
+          <option value="9">Tokyo / Seoul (JST/KST, UTC+9)</option>
+          <option value="8">Perth (AWST, UTC+8)</option>
+          <option value="8">Singapore / Hong Kong (UTC+8)</option>
+          <option value="8">Beijing / Shanghai (CST, UTC+8)</option>
+          <option value="8">Kuala Lumpur (MYT, UTC+8)</option>
+          <option value="7">Bangkok / Jakarta (UTC+7)</option>
+          <option value="6">Dhaka (BST, UTC+6)</option>
+          <option value="5.5">India (IST, UTC+5:30)</option>
+          <option value="5">Karachi / Islamabad (PKT, UTC+5)</option>
+          <option value="4">Dubai / Abu Dhabi (GST, UTC+4)</option>
+          <option value="3">Nairobi / Riyadh (EAT/AST, UTC+3)</option>
+          <option value="3">Moscow (MSK, UTC+3)</option>
+          <option value="3">Istanbul (TRT, UTC+3)</option>
+          <option value="2">Cairo (EET, UTC+2)</option>
+          <option value="2">Johannesburg (SAST, UTC+2)</option>
+          <option value="2">Paris / Berlin / Rome (CEST, UTC+2)</option>
+          <option value="2">Athens / Helsinki (EEST, UTC+2)</option>
+          <option value="1">London (BST, UTC+1)</option>
+          <option value="1">Dublin (IST, UTC+1)</option>
+          <option value="1">Lagos / Casablanca (WAT, UTC+1)</option>
+          <option value="0">UTC+0 / Reykjavik</option>
+          <option value="0">Accra / Dakar (GMT, UTC+0)</option>
+          <option value="-3">Buenos Aires / Sao Paulo (UTC-3)</option>
+          <option value="-3">Santiago (CLT, UTC-3)</option>
+          <option value="-4">New York / Toronto (EDT, UTC-4)</option>
+          <option value="-4">Caracas / La Paz (UTC-4)</option>
+          <option value="-5">Chicago / Mexico City (CDT, UTC-5)</option>
+          <option value="-5">Lima / Bogota (PET/COT, UTC-5)</option>
+          <option value="-6">Denver / Calgary (MDT, UTC-6)</option>
+          <option value="-7">Los Angeles / Vancouver (PDT, UTC-7)</option>
+          <option value="-8">Anchorage (AKDT, UTC-8)</option>
+          <option value="-10">Honolulu (HST, UTC-10)</option>
+        </select>
+      </div>
       <div class="ctrl-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
         <span class="ctrl-label">Highlight</span>
         <div class="highlight-rows" id="highlight-rows"></div>
         <button class="hl-add" id="hl-add-btn" onclick="addHighlightRow()">+ Add team</button>
       </div>
-      <span class="highlight-note" id="highlight-note">No team highlighted</span>
+      <span class="highlight-note" id="highlight-note" style="display:none"></span>
     </div>
   </div>
 
   <div class="standings-note">
     <strong>Standings will be updated as the tournament progresses.</strong>
-    All records currently show 0 &mdash; check back once the group stage kicks off on 11 June 2026.
+    All records currently show 0 &mdash; check back once the group stage kicks off on <span id="kickoff-date">11 June 2026 (AEST, UTC+10)</span>.
   </div>
 
   <div class="groups-grid" id="groups-grid"></div>
@@ -531,15 +574,17 @@ function addHighlightRow() {
   _highlightTeams[idx] = next;
   saveHighlights();
   renderHighlightRows();
-  render(null, lastData);
+  if (lastData) render(null, lastData);
 }
 
 function updateHighlight(idx, val) {
   if (val === 'none') { removeHighlight(idx); return; }
+  const existingIdx = _highlightTeams.findIndex((t,i) => t === val && i !== idx);
+  if (existingIdx >= 0) _highlightTeams[existingIdx] = _highlightTeams[idx];
   _highlightTeams[idx] = val;
   saveHighlights();
   renderHighlightRows();
-  render(null, lastData);
+  if (lastData) render(null, lastData);
 }
 
 function removeHighlight(idx) {
@@ -547,7 +592,7 @@ function removeHighlight(idx) {
   _highlightTeams = [..._highlightTeams.filter(t => t && t !== 'none'), ...Array(4).fill('none')].slice(0,4);
   saveHighlights();
   renderHighlightRows();
-  render(null, lastData);
+  if (lastData) render(null, lastData);
 }
 
 let lastData = null;
@@ -573,8 +618,9 @@ function render(highlightTeam, data) {
       const s = groupStats[name] || { p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0 };
       const gd = s.gf - s.ga;
       const gdStr = s.p > 0 ? (gd > 0 ? '+' + gd : String(gd)) : '-';
-      const isHi = highlightTeam !== 'none' && name === highlightTeam;
-      const hiCls = isHi ? ' highlighted' : '';
+      const hiIdx = _highlightTeams.findIndex(t => t && t !== 'none' && t === name);
+      const isHi = hiIdx >= 0;
+      const hiCls = isHi ? ` highlighted hi-${hiIdx+1}` : '';
 
       rows += `<tr class="${hiCls}">
         <td class="stat" style="width:20px;padding-left:8px">${i+1}</td>
@@ -626,6 +672,34 @@ async function loadAndRender() {
 
 // Render highlight rows on load
 renderHighlightRows();
+
+// Timezone selector
+try {
+  const savedTz = localStorage.getItem('wc2026_tz');
+  if (savedTz) {
+    const sel = document.getElementById('tz-select');
+    const opt = Array.from(sel.options).find(o => parseFloat(o.value) === parseFloat(savedTz));
+    if (opt) sel.value = opt.value;
+  }
+} catch(e) {}
+
+document.getElementById('tz-select').addEventListener('change', function() {
+  try { localStorage.setItem('wc2026_tz', this.value); } catch(e) {}
+  updateKickoffDate();
+});
+
+function updateKickoffDate() {
+  const sel = document.getElementById('tz-select');
+  const offset = parseFloat(sel.value);
+  const firstMatchUTC = new Date('2026-06-11T19:00:00Z');
+  const local = new Date(firstMatchUTC.getTime() + offset * 3600000);
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const selText = sel.options[sel.selectedIndex].text;
+  const parenMatch = selText.match(/[(]([^)]+)[)]/);
+  const tzLabel = parenMatch ? parenMatch[1] : `UTC${offset >= 0 ? '+' : ''}${offset}`;
+  const el = document.getElementById('kickoff-date');
+  if (el) el.textContent = `${local.getUTCDate()} ${months[local.getUTCMonth()]} ${local.getUTCFullYear()} (${tzLabel})`;
+}
 
 // Initial load + refresh every 60 seconds
 loadAndRender();
