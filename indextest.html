@@ -4433,7 +4433,8 @@ function getScore(teamsStr) {
   }
   if ((s.status === 'IN_PLAY' || s.status === 'PAUSED') && s.home !== null) {
     const minStr = s.minute ? `${s.minute}${s.injuryTime ? '+'+s.injuryTime : ''}'` : '';
-    return { home: s.home, away: s.away, cls: 'score-live', label: s.status === 'PAUSED' ? 'HT' : 'LIVE', minute: minStr };
+    const label = s.status === 'PAUSED' ? 'HT' : (minStr ? '' : 'LIVE');
+    return { home: s.home, away: s.away, cls: 'score-live', label, minute: minStr };
   }
   return null;
 }
