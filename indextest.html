@@ -1074,7 +1074,10 @@ function renderHighlightRows() {
 function addHighlightRow() {
   const idx = _highlightTeams.findIndex(t => !t || t === 'none');
   if (idx === -1) return;
-  _highlightTeams[idx] = ALL_TEAMS[0]; // default to first team
+  const taken = _highlightTeams.filter(t => t && t !== 'none');
+  const next = ALL_TEAMS.find(t => !taken.includes(t));
+  if (!next) return;
+  _highlightTeams[idx] = next;
   saveHighlights();
   renderHighlightRows();
   const s = getState();
@@ -1086,8 +1089,14 @@ function updateHighlight(idx, val) {
     removeHighlight(idx);
     return;
   }
+  // Prevent duplicates - if already selected elsewhere, swap them
+  const existingIdx = _highlightTeams.findIndex((t,i) => t === val && i !== idx);
+  if (existingIdx >= 0) {
+    _highlightTeams[existingIdx] = _highlightTeams[idx]; // swap
+  }
   _highlightTeams[idx] = val;
   saveHighlights();
+  renderHighlightRows();
   const s = getState();
   render(s.offset, s.team);
 }
