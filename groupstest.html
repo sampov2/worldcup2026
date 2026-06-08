@@ -159,15 +159,17 @@
     overflow: hidden;
   }
 
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.85)} }
   .live-dot {
     display: inline-block;
-    width: 8px; height: 8px;
-    background: var(--win);
+    width: 9px; height: 9px;
+    background: #2ECC71;
     border-radius: 50%;
     margin-left: 8px;
-    animation: pulse 1.2s infinite;
+    animation: pulse 1.2s ease-in-out infinite;
     vertical-align: middle;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px #2ECC71;
   }
   .group-header {
     display: flex; align-items: center; gap: 8px;
@@ -631,7 +633,6 @@ function render(highlightTeam, data) {
     const card = document.createElement('div');
     card.className = 'group-card';
     const isLive = liveGroups && liveGroups.has(grp);
-    console.log("Group:", grp, "isLive:", isLive, "liveGroups:", [...(liveGroups||[])]);
 
     // Check if any matches played in this group
     const played = teamList.some(t => groupStats[t]?.p > 0);
