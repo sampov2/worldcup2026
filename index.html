@@ -305,6 +305,9 @@
     gap: 14px 16px; flex: 1; align-content: start;
   }
   body.print-mode .schedule { gap: 4px 6px; }
+  body.single-col .schedule { grid-template-columns: 1fr !important; }
+  @media screen and (max-width: 900px) { #col-switch { display: none !important; } }
+  @media screen and (max-width: 900px) { #col-switch { display: none !important; } }
 
   /* coffee buttons + version (defined once, cleanly) */
   #bmc-header {
@@ -4120,6 +4123,13 @@
       <div class="ctrl-row">
         <button id="mode-toggle">&#9788; Switch to Print Mode</button>
         <button id="knockout-toggle">Hide Knockout Stage</button>
+        <div class="time-switch" id="col-switch" title="Toggle single/double column" style="margin-right:8px">
+          <span class="time-switch-label" id="cs-left">1 col</span>
+          <div class="time-switch-track" id="cs-track">
+            <div class="time-switch-thumb" id="cs-thumb"></div>
+          </div>
+          <span class="time-switch-label" id="cs-right">2 col</span>
+        </div>
         <div class="time-switch" id="time-switch" title="Toggle 12/24 hour time">
           <span class="time-switch-label" id="ts-left">12hr</span>
           <div class="time-switch-track" id="ts-track">
@@ -4194,13 +4204,13 @@
   <div class="schedule-note">
     <strong>Scores will be updated live during the tournament.</strong>
     The group stage kicks off on <span id="kickoff-date">12 June 2026 (AEST, UTC+10)</span>. Check back then to see live and final scores updated automatically.<br>
-    <strong>&#10024; New:</strong> <span style="color:var(--text-sub)">Select multiple teams to highlight (up to 4)</span><br>
+    <strong>&#10024; New:</strong> <span style="color:var(--text-sub)">Toggle option for 1 or 2 column display (if your screen is big enough)</span><br>
     <strong>&#128233; Like this page?</strong> <a href="https://forms.gle/SdgXv6VJLanh5JBJ6" target="_blank" style="color:var(--gold);text-decoration:none;font-weight:700;">Get notified about future tournaments and events &rarr;</a>
   </div>
   <div class="schedule" id="schedule"></div>
 
   <div class="footer">
-    <p id="footer-tz">All times AEST (UTC+10) &bull; Source: FIFA / Fox Sports 2026 &bull; <span id="version">v1.35</span></p>
+    <p id="footer-tz">All times AEST (UTC+10) &bull; Source: FIFA / Fox Sports 2026 &bull; <span id="version">v1.36</span></p>
     <p>72 group stage matches &bull; 12 groups &bull; Top 2 per group + 8 best 3rd place advance</p>
   </div>
   <div style="text-align:center;margin-top:12px;">
@@ -4566,7 +4576,7 @@ function render(offset, team) {
     ? `UTC${sign}${Math.floor(offset)}:${Math.abs((offset%1)*60) === 30 ? '30':'00'}`
     : `UTC${sign}${offset}`;
   document.getElementById('footer-tz').innerHTML =
-    `All times ${lbl} \u2022 Source: FIFA / Fox Sports 2026 \u2022 <span id="version" style="color:var(--text-muted);font-style:italic">v1.35</span>`;
+    `All times ${lbl} \u2022 Source: FIFA / Fox Sports 2026 \u2022 <span id="version" style="color:var(--text-muted);font-style:italic">v1.36</span>`;
 
   // Update kickoff date label based on timezone
   // First match is Mexico v South Africa: 2026-06-11T19:00:00Z
@@ -4723,6 +4733,37 @@ btn.addEventListener('click', () => {
   const isPrint = document.body.classList.toggle('print-mode');
   btn.textContent = isPrint ? '\u2600 Switch to Night Mode' : '\u2788 Switch to Print Mode';
 });
+
+// Column layout toggle
+let singleCol = false;
+try {
+  if (localStorage.getItem('wc2026_singlecol') === '1') {
+    singleCol = true;
+    document.body.classList.add('single-col');
+  }
+} catch(e) {}
+
+function updateColSwitch() {
+  const track = document.getElementById('cs-track');
+  const left  = document.getElementById('cs-left');
+  const right = document.getElementById('cs-right');
+  if (singleCol) {
+    track.classList.remove('on');
+    left.classList.add('active');
+    right.classList.remove('active');
+  } else {
+    track.classList.add('on');
+    left.classList.remove('active');
+    right.classList.add('active');
+  }
+}
+document.getElementById('col-switch').addEventListener('click', () => {
+  singleCol = !singleCol;
+  document.body.classList.toggle('single-col', singleCol);
+  try { localStorage.setItem('wc2026_singlecol', singleCol ? '1' : '0'); } catch(e) {}
+  updateColSwitch();
+});
+updateColSwitch();
 
 // Time format switch
 function updateSwitch() {
