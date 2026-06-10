@@ -4232,7 +4232,7 @@
             <option value="R16">Round of 16</option>
             <option value="QF">Quarter Finals</option>
             <option value="SF">Semi Finals</option>
-            <option value="F">Final</option>
+            <option value="Final">Final</option>
           </select>
           <select id="team-filter" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(12px,1.8vw,15px);border:1.5px solid var(--ctrl-border);border-radius:4px;padding:5px 8px;background:var(--ctrl-bg);color:var(--ctrl-text);cursor:pointer;margin-top:6px;">
             <option value="all">All teams</option>
@@ -4459,7 +4459,7 @@ const KNOCKOUT_MATCHES = [
   { grp:'SF',  num:'M102',utc:19,   date:'2026-07-15', teams:'Win M99 v Win M100',    venue:'Atlanta'       },
   // Third place M103 + Final M104
   { grp:'3rd', num:'M103',utc:21,   date:'2026-07-18', teams:'Loss M101 v Loss M102', venue:'Miami'         },
-  { grp:'F',   num:'M104',utc:19,   date:'2026-07-19', teams:'FINAL: Win M101 v Win M102', venue:'New York/NJ'},
+  { grp:'Final',num:'M104',utc:19,   date:'2026-07-19', teams:'FINAL: Win M101 v Win M102', venue:'New York/NJ'},
 ];
 
 let showKnockout = true;
@@ -4606,7 +4606,7 @@ function render(offset, team) {
   const teamFilter = document.getElementById('team-filter')?.value || 'all';
   const groupFilter = document.getElementById('group-filter')?.value || 'all';
   // If group filter is set to a knockout round, skip group stage entirely
-  const koRounds = ['R32','R16','QF','SF','F'];
+  const koRounds = ['R32','R16','QF','SF','Final'];
   const skipGroupStage = groupFilter !== 'all' && koRounds.includes(groupFilter);
   keys.forEach(k => {
     if (skipGroupStage) return;
@@ -4659,8 +4659,8 @@ function render(offset, team) {
     }));
 
     // Round label colours
-    const koColors = { R32:'#7A82A8', R16:'#5DADE2', QF:'#A569BD', SF:'#EC407A', '3rd':'#1ABC9C', F:'#C9A84C' };
-    const koPrintColors = { R32:'#555', R16:'#1a5276', QF:'#6c3483', SF:'#b03a7c', '3rd':'#148f77', F:'#b7950b' };
+    const koColors = { R32:'#7A82A8', R16:'#5DADE2', QF:'#A569BD', SF:'#EC407A', '3rd':'#1ABC9C', Final:'#C9A84C' };
+    const koPrintColors = { R32:'#555', R16:'#1a5276', QF:'#6c3483', SF:'#b03a7c', '3rd':'#148f77', Final:'#b7950b' };
 
     koKeys.forEach(k => {
       // If group filter is a group stage letter, skip knockout stage
