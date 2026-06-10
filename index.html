@@ -305,7 +305,7 @@
     gap: 14px 16px; flex: 1; align-content: start;
   }
   body.print-mode .schedule { gap: 4px 6px; }
-  body.single-col .schedule { grid-template-columns: 1fr !important; }
+  body.single-col:not(.print-mode) .schedule { grid-template-columns: 1fr !important; }
   @media screen and (max-width: 900px) { #col-switch { display: none !important; } #col-switch-row { display: none !important; } }
   @media screen and (max-width: 900px) { #col-switch { display: none !important; } #col-switch-row { display: none !important; } }
 
