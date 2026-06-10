@@ -153,6 +153,9 @@
   body.print-mode .ctrl-row { gap: 6px; }
   body.print-mode .highlight-rows,
   body.print-mode #hl-add-btn { display: none !important; }
+  body.print-mode #filters-row,
+  body.print-mode #col-switch-row,
+  body.print-mode .hl-ctrl-row { display: none !important; }
 
   .ctrl-label {
     font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
@@ -4206,7 +4209,7 @@
           <div class="highlight-rows" id="highlight-rows"></div>
           <button class="hl-add" id="hl-add-btn" onclick="addHighlightRow()">+ Add team</button>
         </div>
-        <div class="ctrl-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
+        <div class="ctrl-row" id="filters-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
           <span class="ctrl-label">Filters</span>
           <select id="city-filter" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(12px,1.8vw,15px);border:1.5px solid var(--ctrl-border);border-radius:4px;padding:5px 8px;background:var(--ctrl-bg);color:var(--ctrl-text);cursor:pointer;">
             <option value="all">All cities</option>
