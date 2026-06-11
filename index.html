@@ -4250,7 +4250,7 @@
             <option value="SF">Semi Finals</option>
             <option value="Final">Final</option>
           </select>
-          <select id="team-filter" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(12px,1.8vw,15px);border:1.5px solid var(--ctrl-border);border-radius:4px;padding:5px 8px;background:var(--ctrl-bg);color:var(--ctrl-text);cursor:pointer;margin-top:6px;">
+          <select id="team-filter" multiple style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(12px,1.8vw,15px);border:1.5px solid var(--ctrl-border);border-radius:4px;padding:5px 8px;background:var(--ctrl-bg);color:var(--ctrl-text);cursor:pointer;margin-top:6px;">
             <option value="all">All teams</option>
             <option value="Algeria">Algeria</option>
             <option value="Argentina">Argentina</option>
@@ -4619,7 +4619,12 @@ function render(offset, team) {
 
   // --- GROUP STAGE ---
   const cityFilter = document.getElementById('city-filter')?.value || 'all';
-  const teamFilter = document.getElementById('team-filter')?.value || 'all';
+
+  const teamFilters = []
+  for (var i = 0; i < document.getElementById('group-filter').selectedOptions.length; i++) {
+    teamFilters.push(document.getElementById('group-filter').selectedOptions[i].value)
+  }
+
   const groupFilter = document.getElementById('group-filter')?.value || 'all';
   // If group filter is set to a knockout round, skip group stage entirely
   const koRounds = ['R32','R16','QF','SF','Final'];
@@ -4627,7 +4632,7 @@ function render(offset, team) {
   keys.forEach(k => {
     if (skipGroupStage) return;
     let filteredMatches = cityFilter === 'all' ? buckets[k] : buckets[k].filter(m => m.venue === cityFilter);
-    if (teamFilter !== 'all') filteredMatches = filteredMatches.filter(m => m.teams.includes(teamFilter));
+    if (teamFilters.length > 0) filteredMatches = filteredMatches.filter(m => teamFilters.find(team => m.teams.includes(team)));
     if (groupFilter !== 'all') filteredMatches = filteredMatches.filter(m => m.grp === groupFilter);
     if (filteredMatches.length === 0) return;
     const hdr = fmtHeader(k);
@@ -4682,7 +4687,7 @@ function render(offset, team) {
       // If group filter is a group stage letter, skip knockout stage
       if (groupFilter !== 'all' && !koRounds.includes(groupFilter)) return;
       let koFiltered = cityFilter === 'all' ? koBuckets[k] : koBuckets[k].filter(m => m.venue === cityFilter);
-      if (teamFilter !== 'all') koFiltered = koFiltered.filter(m => m.teams.includes(teamFilter));
+      if (teamFilters.length > 0) koFiltered = koFiltered.filter(m => teamFilters.find(team => m.teams.includes(team)));
       if (groupFilter !== 'all' && koRounds.includes(groupFilter)) koFiltered = koFiltered.filter(m => m.grp === groupFilter);
       if (koFiltered.length === 0) return;
       const hdr = fmtHeader(k);
