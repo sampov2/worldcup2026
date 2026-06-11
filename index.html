@@ -4621,8 +4621,8 @@ function render(offset, team) {
   const cityFilter = document.getElementById('city-filter')?.value || 'all';
 
   const teamFilters = []
-  for (var i = 0; i < document.getElementById('group-filter').selectedOptions.length; i++) {
-    teamFilters.push(document.getElementById('group-filter').selectedOptions[i].value)
+  for (var i = 0; i < document.getElementById('team-filter').selectedOptions.length; i++) {
+    teamFilters.push(document.getElementById('team-filter').selectedOptions[i].value)
   }
 
   const groupFilter = document.getElementById('group-filter')?.value || 'all';
